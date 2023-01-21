@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kolomiec.taskspring.entity.Task;
-import ru.kolomiec.taskspring.services.TaskService;
+import ru.kolomiec.taskspring.services.interfaces.TaskService;
 
 import java.util.List;
 

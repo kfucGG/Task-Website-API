@@ -1,4 +1,4 @@
-package ru.kolomiec.taskspring.services;
+package ru.kolomiec.taskspring.services.interfaces;
 
 
 import ru.kolomiec.taskspring.entity.Person;

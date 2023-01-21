@@ -6,12 +6,13 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kolomiec.taskspring.entity.Person;
 import ru.kolomiec.taskspring.entity.Task;
 import ru.kolomiec.taskspring.repository.PersonRepository;
+import ru.kolomiec.taskspring.services.interfaces.PersonService;
 
 import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
-public class PersonServiceImpl implements PersonService{
+public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository personRepository;
 
