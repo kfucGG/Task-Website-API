@@ -4,13 +4,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolomiec.taskspring.entity.Task;
 import ru.kolomiec.taskspring.repository.TaskRepository;
+import ru.kolomiec.taskspring.services.interfaces.TaskService;
 
 import java.util.List;
 
 
 @Service
 @Transactional(readOnly = true)
-public class TaskServiceImpl implements TaskService{
+public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
 

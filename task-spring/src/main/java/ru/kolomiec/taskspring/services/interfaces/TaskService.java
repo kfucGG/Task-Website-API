@@ -1,6 +1,5 @@
-package ru.kolomiec.taskspring.services;
+package ru.kolomiec.taskspring.services.interfaces;
 
-import org.springframework.data.jpa.repository.Query;
 import ru.kolomiec.taskspring.entity.Task;
 
 import java.util.List;

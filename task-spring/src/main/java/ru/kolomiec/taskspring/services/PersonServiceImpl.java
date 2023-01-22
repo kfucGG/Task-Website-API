@@ -1,17 +1,21 @@
 package ru.kolomiec.taskspring.services;
 
 
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolomiec.taskspring.entity.Person;
 import ru.kolomiec.taskspring.entity.Task;
 import ru.kolomiec.taskspring.repository.PersonRepository;
+import ru.kolomiec.taskspring.security.jwt.JwtRequest;
+import ru.kolomiec.taskspring.services.interfaces.PersonService;
 
 import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
-public class PersonServiceImpl implements PersonService{
+public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository personRepository;
 
@@ -21,8 +25,8 @@ public class PersonServiceImpl implements PersonService{
 
     @Override
     public Person findByUsername(String username) {
-        return personRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("bad"));
         //TODO custom exception
+        return personRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("bad"));
     }
 
     @Override
@@ -42,5 +46,14 @@ public class PersonServiceImpl implements PersonService{
     public void addTaskToPerson(Task task, Person person) {
         person.setUserTask(List.of(task));
         personRepository.save(person);
+    }
+
+    @Override
+    public boolean isProcessAuthPersonPrincipalIsValid(JwtRequest jwtRequest) {
+        Person authPerson = findByUsername(jwtRequest.getUsername());
+        if (!authPerson.getPassword().equals(jwtRequest.getPassword())) {
+            throw new BadCredentialsException("incorrect password");
+        }
+        return true;
     }
 }
