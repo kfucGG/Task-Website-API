@@ -3,6 +3,7 @@ package ru.kolomiec.taskspring.services.interfaces;
 
 import ru.kolomiec.taskspring.entity.Person;
 import ru.kolomiec.taskspring.entity.Task;
+import ru.kolomiec.taskspring.security.jwt.JwtRequest;
 
 public interface PersonService {
 
@@ -13,4 +14,6 @@ public interface PersonService {
     void deletePerson(Long id);
 
     void addTaskToPerson(Task task, Person person);
+
+    boolean isProcessAuthPersonPrincipalIsValid(JwtRequest processAuthPerson);
 }
