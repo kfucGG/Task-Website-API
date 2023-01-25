@@ -25,22 +25,11 @@ public class AuthController {
     private final JwtUtil jwtUtil;
     private final PersonService personService;
 
-    //todo add exception handler for badCredentials
     @PostMapping("/login")
     @Operation(summary = "login with username and password and returnes jwt token")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest jwtRequest) {
         personService.isProcessAuthPersonPrincipalIsValid(jwtRequest);
         return ResponseEntity.ok(jwtUtil.generateToken(jwtRequest.getUsername()));
-    }
-
-    @ExceptionHandler(BadCredentialsException.class)
-    public String bad() {
-        return "bad password";
-    }
-
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public String badName() {
-        return "bad name";
     }
 
     @PostMapping("/registration")//todo maybe should create entity class for registration(DTO maybe)

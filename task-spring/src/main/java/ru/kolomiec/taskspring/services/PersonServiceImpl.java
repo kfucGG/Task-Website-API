@@ -25,8 +25,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public Person findByUsername(String username) {
-        //TODO custom exception
-        return personRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("bad"));
+        return personRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username does not exist"));
     }
 
     @Override
