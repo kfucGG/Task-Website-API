@@ -1,8 +1,10 @@
 package ru.kolomiec.taskspring.services;
 
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolomiec.taskspring.entity.Person;
@@ -15,13 +17,11 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository personRepository;
-
-    public PersonServiceImpl(PersonRepository personRepository) {
-        this.personRepository = personRepository;
-    }
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Person findByUsername(String username) {
@@ -32,6 +32,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     @Transactional
     public void savePerson(Person person) {
+        person.setPassword(encodePassword(person.getPassword()));
         personRepository.save(person);
     }
 
@@ -49,11 +50,13 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public boolean isProcessAuthPersonPrincipalIsValid(JwtRequest jwtRequest) {
-        Person authPerson = findByUsername(jwtRequest.getUsername());
-        if (!authPerson.getPassword().equals(jwtRequest.getPassword())) {
-            throw new BadCredentialsException("incorrect password");
+    public void isProcessAuthPersonPrincipalIsValid(JwtRequest jwtRequest) {
+        if (!passwordEncoder.matches(jwtRequest.getPassword(), findByUsername(jwtRequest.getUsername()).getPassword())) {
+            throw new BadCredentialsException("bad password");
         }
-        return true;
+    }
+
+    private String encodePassword(String password) {
+        return passwordEncoder.encode(password);
     }
 }

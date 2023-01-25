@@ -3,10 +3,7 @@ package ru.kolomiec.taskspring.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
@@ -16,6 +13,8 @@ import java.util.List;
 @Getter
 @Setter
 @RequiredArgsConstructor
+@ToString
+@EqualsAndHashCode
 public class Person implements Serializable {
 
     @Id
@@ -32,13 +31,4 @@ public class Person implements Serializable {
                 cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
     private List<Task> userTask;
 
-    @Override
-    public String toString() {
-        return "Person{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", userTask=" + userTask +
-                '}';
-    }
 }

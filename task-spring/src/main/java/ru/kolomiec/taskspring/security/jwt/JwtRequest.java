@@ -1,13 +1,13 @@
 package ru.kolomiec.taskspring.security.jwt;
 
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @RequiredArgsConstructor
 @Getter
 @Setter
+@ToString
+@EqualsAndHashCode
 public class JwtRequest {
 
     private final String username;
