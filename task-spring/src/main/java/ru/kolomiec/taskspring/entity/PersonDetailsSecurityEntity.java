@@ -12,7 +12,6 @@ public class PersonDetailsSecurityEntity implements UserDetails {
     private final Person person;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        //todo roles here then
         return null;
     }
 

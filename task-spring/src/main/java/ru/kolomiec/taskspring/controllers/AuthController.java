@@ -17,7 +17,7 @@ import ru.kolomiec.taskspring.services.interfaces.PersonService;
 
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @Tag(name = "Authentication controller", description = "authentication controller with jwt token")
 public class AuthController {
@@ -35,7 +35,7 @@ public class AuthController {
     @PostMapping("/registration")//todo maybe should create entity class for registration(DTO maybe)
     @Operation(summary = "registration new person and returns jwt token of this person")
     public ResponseEntity<JwtResponse> registration(@RequestBody Person person) {
-        personService.savePerson(person);//todo add validation and exception handlers (ControllerAdvice.class)
+        personService.savePerson(person);
         return ResponseEntity.ok(jwtUtil.generateToken(person.getUsername()));
     }
 
