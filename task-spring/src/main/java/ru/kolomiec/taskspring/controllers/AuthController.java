@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import ru.kolomiec.taskspring.entity.Person;
 import ru.kolomiec.taskspring.security.jwt.JwtRequest;
@@ -29,6 +31,16 @@ public class AuthController {
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest jwtRequest) {
         personService.isProcessAuthPersonPrincipalIsValid(jwtRequest);
         return ResponseEntity.ok(jwtUtil.generateToken(jwtRequest.getUsername()));
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public String bad() {
+        return "bad password";
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public String badName() {
+        return "bad name";
     }
 
     @PostMapping("/registration")//todo maybe should create entity class for registration(DTO maybe)

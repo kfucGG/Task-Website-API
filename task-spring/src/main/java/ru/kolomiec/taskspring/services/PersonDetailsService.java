@@ -20,16 +20,11 @@ import ru.kolomiec.taskspring.services.interfaces.PersonService;
 @Transactional(readOnly = true)
 public class PersonDetailsService implements UserDetailsService {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-
-
+    private final PersonRepository personRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        //todo fixed bug but need to normal
-        Query query = entityManager.createQuery("from Person p where p.username = :username");
-        Person person = (Person) query.setParameter("username", username).getSingleResult();
-        return new PersonDetailsSecurityEntity(person);
+        return new PersonDetailsSecurityEntity(
+                personRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("not found"))
+        );
     }
 }
