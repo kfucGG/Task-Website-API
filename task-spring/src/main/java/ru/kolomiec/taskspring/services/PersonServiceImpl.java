@@ -7,8 +7,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kolomiec.taskspring.dto.PersonRegistrationDTO;
 import ru.kolomiec.taskspring.entity.Person;
 import ru.kolomiec.taskspring.entity.Task;
+import ru.kolomiec.taskspring.facade.PersonFacade;
 import ru.kolomiec.taskspring.repository.PersonRepository;
 import ru.kolomiec.taskspring.security.jwt.JwtRequest;
 import ru.kolomiec.taskspring.services.interfaces.PersonService;
@@ -22,7 +24,7 @@ public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository personRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final PersonFacade personFacade;
     @Override
     public Person findByUsername(String username) {
         return personRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username does not exist"));
@@ -33,6 +35,13 @@ public class PersonServiceImpl implements PersonService {
     public void savePerson(Person person) {
         person.setPassword(encodePassword(person.getPassword()));
         personRepository.save(person);
+    }
+
+    @Override
+    @Transactional
+    public void savePerson(PersonRegistrationDTO personRegistration) {
+        personRegistration.setPassword(encodePassword(personRegistration.getPassword()));
+        personRepository.save(personFacade.fromRegistrationDTOtoPerson(personRegistration));
     }
 
     @Override

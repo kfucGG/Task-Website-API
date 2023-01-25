@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import ru.kolomiec.taskspring.dto.PersonRegistrationDTO;
 import ru.kolomiec.taskspring.entity.Person;
+import ru.kolomiec.taskspring.facade.PersonFacade;
 import ru.kolomiec.taskspring.security.jwt.JwtRequest;
 import ru.kolomiec.taskspring.security.jwt.JwtResponse;
 import ru.kolomiec.taskspring.security.jwt.JwtUtil;
@@ -32,9 +34,9 @@ public class AuthController {
         return ResponseEntity.ok(jwtUtil.generateToken(jwtRequest.getUsername()));
     }
 
-    @PostMapping("/registration")//todo maybe should create entity class for registration(DTO maybe)
+    @PostMapping("/registration")
     @Operation(summary = "registration new person and returns jwt token of this person")
-    public ResponseEntity<JwtResponse> registration(@RequestBody Person person) {
+    public ResponseEntity<JwtResponse> registration(@RequestBody PersonRegistrationDTO person) {
         personService.savePerson(person);
         return ResponseEntity.ok(jwtUtil.generateToken(person.getUsername()));
     }
