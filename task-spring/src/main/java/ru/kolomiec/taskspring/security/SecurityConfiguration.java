@@ -17,7 +17,7 @@ import ru.kolomiec.taskspring.security.jwt.JwtFilter;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    //For swagger-ui without authentication
+    //todo For swagger-ui without authentication
     private static final String[] AUTH_WHITELIST = {
             "/v2/api-docs",
             "/swagger-resources",
@@ -30,13 +30,12 @@ public class SecurityConfiguration {
             "/swagger-ui/**"
     };
 
-    //todo change all controllers should starts with /api
     private final JwtFilter jwtFilter;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable();
         http.authorizeRequests(registry -> {
-           registry.requestMatchers("/auth/*").permitAll();
+           registry.requestMatchers("/api/auth/*").permitAll();
            registry.requestMatchers(AUTH_WHITELIST).permitAll();
            registry.anyRequest().authenticated();
         });

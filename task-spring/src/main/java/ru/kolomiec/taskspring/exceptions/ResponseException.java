@@ -16,6 +16,6 @@ public class ResponseException {
 
     private String message;
 
-    @JsonFormat(pattern = "dd-mm-yyyy hh:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime time;
 }
