@@ -17,7 +17,7 @@ import ru.kolomiec.taskspring.security.jwt.JwtFilter;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    //todo For swagger-ui without authentication
+    //todo For swagger-ui without authentication (mb make annotation)
     private static final String[] AUTH_WHITELIST = {
             "/v2/api-docs",
             "/swagger-resources",

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @AllArgsConstructor
 @Getter
@@ -16,6 +17,6 @@ public class ResponseException {
 
     private String message;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime time;
+    @JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
+    private Date time;
 }

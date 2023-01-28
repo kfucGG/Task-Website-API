@@ -3,13 +3,18 @@ package ru.kolomiec.taskspring.security.jwt;
 
 import lombok.*;
 
-@RequiredArgsConstructor
+import java.io.Serializable;
+
+
+
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode
-public class JwtRequest {
+@AllArgsConstructor
+@NoArgsConstructor
+public class JwtRequest implements Serializable {
 
-    private final String username;
-    private final String password;
+    private String username;
+    private String password;
 }
