@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.kolomiec.taskspring.exceptions.ResponseException;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 
 @RestControllerAdvice
@@ -18,11 +19,11 @@ public class AuthExceptionHandlerAdvice {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ResponseException> badPasswordHandler(BadCredentialsException ex) {
-        return new ResponseEntity(new ResponseException(ex.getMessage(), LocalDateTime.now()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(new ResponseException(ex.getMessage(), new Date()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ResponseException> defunctUsername(UsernameNotFoundException ex) {
-        return new ResponseEntity<>(new ResponseException(ex.getMessage(), LocalDateTime.now()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ResponseException(ex.getMessage(), new Date()), HttpStatus.BAD_REQUEST);
     }
 }

@@ -9,13 +9,12 @@ import ru.kolomiec.taskspring.repository.PersonRepository;
 
 import java.util.List;
 
-
 @Component
-public class DatabaseTestEntityInit {
+public class DatabaseInit {
 
     private final PersonRepository personRepository;
 
-    public DatabaseTestEntityInit(PersonRepository personRepository) {
+    public DatabaseInit(PersonRepository personRepository) {
         this.personRepository = personRepository;
     }
 
