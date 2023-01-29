@@ -12,4 +12,5 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 
     @Query("SELECT DISTINCT p from Person p left join fetch p.userTask where username = :username")
     Optional<Person> findByUsername(String username);
+
 }

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.web.servlet.MvcResult;
 import ru.kolomiec.taskspring.IntegrationTestBase;
 import ru.kolomiec.taskspring.dto.PersonRegistrationDTO;
 import ru.kolomiec.taskspring.security.jwt.JwtRequest;
@@ -61,7 +62,6 @@ public class AuthControllerIT extends IntegrationTestBase {
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
-
     private void makeRequestForRegistrationNewPerson(PersonRegistrationDTO personRegistrationDTO) throws Exception {
         mockMvc.perform(post("/api/auth/registration")
                 .content(objectMapper.writeValueAsString(personRegistrationDTO))

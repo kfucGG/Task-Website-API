@@ -44,13 +44,13 @@ public class JwtFilter extends OncePerRequestFilter {
         if (token != null) {
             UserDetails authenticationPersonDetails = personDetailsService.loadUserByUsername(jwtUtil.getUsernameClaimFromToken(token));
             SecurityContext securityContext = SecurityContextHolder.getContext();
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    authenticationPersonDetails, authenticationPersonDetails.getPassword(), authenticationPersonDetails.getAuthorities()
+            );
             if (securityContext.getAuthentication() == null) {
-                securityContext.setAuthentication(
-                        new UsernamePasswordAuthenticationToken(authenticationPersonDetails,
-                                authenticationPersonDetails.getPassword())
-                );
+                securityContext.setAuthentication(authToken);
             }
         }
-        doFilter(request, response, filterChain);
+        filterChain.doFilter(request, response);
     }
 }
