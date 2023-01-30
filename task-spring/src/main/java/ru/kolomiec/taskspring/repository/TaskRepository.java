@@ -13,4 +13,13 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query("from Task t where t.owner.id = :id")
     Optional<List<Task>> findAllByOwnerId(Long id);
+
+    @Query("from Task t where t.owner.username = :username")
+    Optional<List<Task>> findAllByOwnerUsername(String username);
+
+    @Query("from Task t where t.taskName = :taskName")
+    Optional<Task> findTaskByTaskName(String taskName);
+
+    @Query("from Task t where t.owner.username = :ownerUsername and t.id = :taskId")
+    Optional<Task> findTaskByOwnerUsernameAndTaskId(String ownerUsername, Long taskId);
 }
