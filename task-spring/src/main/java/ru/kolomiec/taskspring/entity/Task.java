@@ -19,12 +19,12 @@ public class Task implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "taskName", nullable = false)
+    @Column(name = "task_name", nullable = false)
     private String taskName;
 
     @JsonIgnore
     @ManyToOne()
-    @JoinColumn(columnDefinition = "person_id", referencedColumnName = "id")
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person owner;
 
 

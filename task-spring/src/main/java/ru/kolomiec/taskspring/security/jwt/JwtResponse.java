@@ -1,14 +1,14 @@
 package ru.kolomiec.taskspring.security.jwt;
 
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
+@ToString
 public class JwtResponse {
 
-    private final String token;
+    private String token;
 }

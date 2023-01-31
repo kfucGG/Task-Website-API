@@ -1,6 +1,7 @@
 package ru.kolomiec.taskspring.controllers;
 
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.http.MediaType;
@@ -15,9 +16,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
-@Sql(value = "classpath:/sqlQuery/delete-all-from-person-table.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class AuthControllerIT extends IntegrationTestBase {
+@Sql(value = "classpath:/sqlQuery/drop-person-table.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = "classpath:/sqlQuery/create-person-table.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+public class AuthControllerIT extends ControllerIntegrationTestBase {
 
     private final PersonRegistrationDTO personRegistrationDTO = new PersonRegistrationDTO("test", "test");
 
@@ -62,9 +63,5 @@ public class AuthControllerIT extends IntegrationTestBase {
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
-    private void makeRequestForRegistrationNewPerson(PersonRegistrationDTO personRegistrationDTO) throws Exception {
-        mockMvc.perform(post("/api/auth/registration")
-                .content(objectMapper.writeValueAsString(personRegistrationDTO))
-                .contentType(MediaType.APPLICATION_JSON));
-    }
+
 }
