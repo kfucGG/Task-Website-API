@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="task-spring" />
+        <module name="task-telegram-bot" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="demo" target="17" />
+      <module name="Task-Website-API" target="1.5" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

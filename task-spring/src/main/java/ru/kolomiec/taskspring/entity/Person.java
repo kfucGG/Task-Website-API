@@ -12,7 +12,8 @@ import java.util.List;
 @Table(name = "person")
 @Getter
 @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
 @EqualsAndHashCode
 public class Person implements Serializable {
