@@ -10,7 +10,6 @@ import javax.persistence.*;
 @Table(name = "person")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Person {
@@ -21,7 +20,8 @@ public class Person {
     private String username;
     private String password;
 
-    @OneToOne(mappedBy = "owner", cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
+    @OneToOne(mappedBy = "owner", cascade = {CascadeType.ALL})
+    @JsonIgnore
     private AuthToken authToken;
     @JsonIgnore
     private Long chatId;

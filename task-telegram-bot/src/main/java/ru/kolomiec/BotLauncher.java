@@ -11,7 +11,7 @@ public class BotLauncher {
 
 
     public static void main( String[] args ) throws Exception {
-        HibernateConnection.getInstance().getSessionFactory();
+        HibernateConnection.getSessionFactory();
         TelegramBotsApi api = new TelegramBotsApi(DefaultBotSession.class);
         api.registerBot(new MainBot());
     }

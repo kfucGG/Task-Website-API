@@ -13,31 +13,29 @@ import java.util.Properties;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HibernateConnection {
 
-    private static HibernateConnection hibernateConnection;
 
-    public static HibernateConnection getInstance() {
-        if (hibernateConnection == null) hibernateConnection = new HibernateConnection();
-        return hibernateConnection;
+    private static SessionFactory sessionFactory;
+
+    public static SessionFactory getSessionFactory() {
+        if (sessionFactory == null) {
+            return sessionFactory = getHibernateConfiguration().buildSessionFactory();
+        }
+        return sessionFactory;
     }
-
-    public SessionFactory getSessionFactory() {
-        return getHibernateConfiguration().buildSessionFactory();
-    }
-
-    private Configuration getHibernateConfiguration() {
+    private static Configuration getHibernateConfiguration() {
         Configuration configuration = new Configuration();
         configuration.addAnnotatedClass(Person.class);
         configuration.addAnnotatedClass(AuthToken.class);
         configuration.addProperties(getHibernateProperties());
         return configuration;
     }
-    private Properties getHibernateProperties() {
+    private static Properties getHibernateProperties() {
         Properties properties = new Properties();
         properties.setProperty("hibernate.connection.driver_class", "org.postgresql.Driver");
         properties.setProperty("hibernate.connection.url", "jdbc:postgresql://localhost:5432/task-telegram");
         properties.setProperty("hibernate.connection.username", "root");
         properties.setProperty("hibernate.connection.password", "root");
-        properties.setProperty("hibernate.hbm2ddl.auto", "create");
+        properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         properties.setProperty("hibernate.current_session_context_class", "thread");
         properties.setProperty("hibernate.show_sql", "true");

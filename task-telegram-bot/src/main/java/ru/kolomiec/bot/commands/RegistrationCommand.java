@@ -27,9 +27,8 @@ public class RegistrationCommand extends AbstractCommand {
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
         Person person = buildPersonFromArrayOfStringAndChatId(strings, chat);
-        personDAO.savePerson(person);
         AuthToken token = authApiRequest.registrationNewPersonOnApi(new PersonDTO(person.getUsername(), person.getPassword()));
-        authTokenDAO.saveAuthTokenToPersonByPersonChatId(token, chat.getId());
+        personDAO.savePerson(person, token);
         sendMessage(absSender, "your token is saved in db, you are registered", chat.getId().toString());
     }
 }
