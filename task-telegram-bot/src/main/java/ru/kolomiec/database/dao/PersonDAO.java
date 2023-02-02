@@ -19,55 +19,87 @@ public class PersonDAO {
     }
 
     public void savePerson(Person person) {
-        Session session = sessionFactory.getCurrentSession();
-        session.getTransaction().begin();
-        session.save(person);
-        session.getTransaction().commit();
+        Session session = null;
+        try {
+            session = sessionFactory.getCurrentSession();
+            session.getTransaction().begin();
+            session.save(person);
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+        }
     }
 
     public void savePerson(Person person, AuthToken authToken) {
-        Session session = sessionFactory.getCurrentSession();
-        session.getTransaction().begin();
-        person.setAuthToken(authToken);
-        authToken.setOwner(person);
-        session.save(person);
-        session.getTransaction().commit();
+        Session session = null;
+        try {
+            session = sessionFactory.getCurrentSession();
+            session.getTransaction().begin();
+            person.setAuthToken(authToken);
+            authToken.setOwner(person);
+            session.save(person);
+            session.getTransaction().commit();
+        } catch(Exception e) {
+            session.getTransaction().rollback();
+        }
     }
 
     public void updatePerson(Person person, AuthToken authToken) {
-        Session session = sessionFactory.getCurrentSession();
-        session.getTransaction().begin();
-        deletePersonTokenById(person.getId());
-        authToken.setOwner(person);
-        person.setAuthToken(authToken);
-        session.update(person);
-        session.getTransaction().commit();
+        Session session = null;
+        try {
+            session = sessionFactory.getCurrentSession();
+            session.getTransaction().begin();
+            deletePersonTokenById(person.getId());
+            authToken.setOwner(person);
+            person.setAuthToken(authToken);
+            session.update(person);
+            session.getTransaction().commit();
+        } catch(Exception e) {
+            session.getTransaction().rollback();
+        }
     }
     public void deletePersonTokenById(Long id) {
-        Session session = sessionFactory.openSession();
-        session.getTransaction().begin();
-        Query query = session.createNativeQuery("delete from auth_token where person_id = :id");
-        query.setParameter("id", id);
-        query.executeUpdate();
-        session.getTransaction().commit();
+        Session session = null;
+        try {
+            session = sessionFactory.getCurrentSession();
+            session.getTransaction().begin();
+            Query query = session.createNativeQuery("delete from auth_token where person_id = :id");
+            query.setParameter("id", id);
+            query.executeUpdate();
+            session.getTransaction().commit();
+        } catch(Exception e) {
+            session.getTransaction().rollback();
+        }
     }
     public Person findPersonByChatId(Long chatId) {
-        Session session = sessionFactory.getCurrentSession();
-        session.getTransaction().begin();
-        Query<Person> query = session.createQuery("from Person p where p.chatId = :chatId");
-        query.setParameter("chatId", chatId);
-        List<Person> person = query.list();
-        session.getTransaction().commit();
-        return person.get(0);
+        Session session = null;
+        Person personFromDb = null;
+        try {
+            session = sessionFactory.getCurrentSession();
+            session.getTransaction().begin();
+            Query<Person> query = session.createQuery("from Person p where p.chatId = :chatId");
+            query.setParameter("chatId", chatId);
+            personFromDb = query.uniqueResult();
+            session.getTransaction().commit();
+        } catch(Exception e) {
+            session.getTransaction().rollback();
+        }
+        return personFromDb;
     }
 
     public boolean isPersonSavedInDb(Long chatId) {
-        Session session = sessionFactory.getCurrentSession();
-        session.getTransaction().begin();
-        Query<Person> query = session.createQuery("from Person p where p.chatId = :chatId", Person.class);
-        query.setParameter("chatId", chatId);
-        List<Person> list = query.list();
-        session.getTransaction().commit();
-        return !list.isEmpty();
+        Session session = null;
+        Person personFromDb = null;
+        try {
+            session = sessionFactory.getCurrentSession();
+            session.getTransaction().begin();
+            Query<Person> query = session.createQuery("from Person p where p.chatId = :chatId", Person.class);
+            query.setParameter("chatId", chatId);
+            personFromDb = query.uniqueResult();
+            session.getTransaction().commit();
+        } catch(Exception e) {
+            session.getTransaction().rollback();
+        }
+        return personFromDb != null;
     }
 }
