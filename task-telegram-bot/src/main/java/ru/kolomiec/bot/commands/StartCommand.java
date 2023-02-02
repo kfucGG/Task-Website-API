@@ -1,6 +1,5 @@
 package ru.kolomiec.bot.commands;
 
-import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
@@ -14,10 +13,7 @@ public class StartCommand extends AbstractCommand {
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
-        //todo here is auth or if auth is failed return message that user should be registrate
-        PersonDAO personDAO = new PersonDAO();
-        boolean flag = personDAO.checkPersonSavedInDbByChatId(chat.getId());
-        if (!flag) {
+        if (!personDAO.isPersonSavedInDb(chat.getId())) {
             sendMessage(absSender, "you are auth", chat.getId().toString());
         } else {
             sendMessage(absSender, "you need to call /registration [username] [password] or /auth", chat.getId().toString());

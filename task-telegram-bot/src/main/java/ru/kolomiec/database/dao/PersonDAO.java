@@ -34,6 +34,23 @@ public class PersonDAO {
         session.getTransaction().commit();
     }
 
+    public void updatePerson(Person person, AuthToken authToken) {
+        Session session = sessionFactory.getCurrentSession();
+        session.getTransaction().begin();
+        deletePersonTokenById(person.getId());
+        authToken.setOwner(person);
+        person.setAuthToken(authToken);
+        session.update(person);
+        session.getTransaction().commit();
+    }
+    public void deletePersonTokenById(Long id) {
+        Session session = sessionFactory.openSession();
+        session.getTransaction().begin();
+        Query query = session.createNativeQuery("delete from auth_token where person_id = :id");
+        query.setParameter("id", id);
+        query.executeUpdate();
+        session.getTransaction().commit();
+    }
     public Person findPersonByChatId(Long chatId) {
         Session session = sessionFactory.getCurrentSession();
         session.getTransaction().begin();
@@ -44,13 +61,13 @@ public class PersonDAO {
         return person.get(0);
     }
 
-    public boolean checkPersonSavedInDbByChatId(Long chatId) {
+    public boolean isPersonSavedInDb(Long chatId) {
         Session session = sessionFactory.getCurrentSession();
         session.getTransaction().begin();
         Query<Person> query = session.createQuery("from Person p where p.chatId = :chatId", Person.class);
         query.setParameter("chatId", chatId);
         List<Person> list = query.list();
         session.getTransaction().commit();
-        return list.isEmpty();
+        return !list.isEmpty();
     }
 }

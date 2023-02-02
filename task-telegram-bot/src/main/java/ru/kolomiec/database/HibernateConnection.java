@@ -26,19 +26,24 @@ public class HibernateConnection {
         Configuration configuration = new Configuration();
         configuration.addAnnotatedClass(Person.class);
         configuration.addAnnotatedClass(AuthToken.class);
-        configuration.addProperties(getHibernateProperties());
+        configuration.addProperties(getHibernateDatasource());
+        configuration.addProperties(getHibernateSettings());
         return configuration;
     }
-    private static Properties getHibernateProperties() {
+    private static Properties getHibernateSettings() {
         Properties properties = new Properties();
-        properties.setProperty("hibernate.connection.driver_class", "org.postgresql.Driver");
-        properties.setProperty("hibernate.connection.url", "jdbc:postgresql://localhost:5432/task-telegram");
-        properties.setProperty("hibernate.connection.username", "root");
-        properties.setProperty("hibernate.connection.password", "root");
         properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         properties.setProperty("hibernate.current_session_context_class", "thread");
         properties.setProperty("hibernate.show_sql", "true");
+        return properties;
+    }
+    private static Properties getHibernateDatasource() {
+        Properties properties  = new Properties();
+        properties.setProperty("hibernate.connection.driver_class", "org.postgresql.Driver");
+        properties.setProperty("hibernate.connection.url", "jdbc:postgresql://localhost:5432/task_telegram");
+        properties.setProperty("hibernate.connection.username", "postgres");
+        properties.setProperty("hibernate.connection.password", "root");
         return properties;
     }
 }

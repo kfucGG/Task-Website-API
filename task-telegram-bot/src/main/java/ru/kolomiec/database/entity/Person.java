@@ -12,17 +12,22 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString()
 public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "username", unique = true)
     private String username;
+
+    @Column(name = "password")
     private String password;
 
+    @JsonIgnore
+    @Column(name = "chat_id", nullable = false)
+    private Long chatId;
     @OneToOne(mappedBy = "owner", cascade = {CascadeType.ALL})
     @JsonIgnore
     private AuthToken authToken;
-    @JsonIgnore
-    private Long chatId;
 }
