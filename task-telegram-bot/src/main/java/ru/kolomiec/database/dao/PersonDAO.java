@@ -46,10 +46,10 @@ public class PersonDAO {
 
     public void updatePerson(Person person, AuthToken authToken) {
         Session session = null;
+        deletePersonTokenById(person.getId());
         try {
             session = sessionFactory.getCurrentSession();
             session.getTransaction().begin();
-            deletePersonTokenById(person.getId());
             authToken.setOwner(person);
             person.setAuthToken(authToken);
             session.update(person);
@@ -67,9 +67,10 @@ public class PersonDAO {
             query.setParameter("id", id);
             query.executeUpdate();
             session.getTransaction().commit();
-        } catch(Exception e) {
+        } catch (Exception e) {
             session.getTransaction().rollback();
         }
+
     }
     public Person findPersonByChatId(Long chatId) {
         Session session = null;
