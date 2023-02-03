@@ -18,7 +18,7 @@ public class JwtUtil {
     private final String SECRET = "SECRET";
 
     public JwtResponse generateToken(String username){
-        Date expiresAt = Date.from(ZonedDateTime.now().plusMinutes(1).toInstant());
+        Date expiresAt = Date.from(ZonedDateTime.now().plusMinutes(60).toInstant());
         return new JwtResponse(JWT.create()
                 .withSubject("User details")
                 .withClaim("username", username)
