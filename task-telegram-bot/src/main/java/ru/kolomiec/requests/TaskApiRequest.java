@@ -1,6 +1,7 @@
 package ru.kolomiec.requests;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.*;
 import ru.kolomiec.database.dao.PersonDAO;
 import ru.kolomiec.database.entity.Person;

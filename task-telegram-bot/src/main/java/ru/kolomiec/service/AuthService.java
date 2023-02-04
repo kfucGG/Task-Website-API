@@ -19,7 +19,7 @@ public class AuthService {
     public void refreshToken(Long chatId) {
         Person person = personDAO.findPersonByChatId(chatId);
         AuthToken newToken = authRequest.loginPersonOnApi(new PersonDTO(person.getUsername(), person.getPassword()));
-        personDAO.updatePerson(person, newToken);
+
     }
 
     public void login(Person person) {

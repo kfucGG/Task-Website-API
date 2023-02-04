@@ -15,13 +15,12 @@ public class HelpCommand extends AbstractCommand {
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
         StringBuilder allCommandsDescription = new StringBuilder();
-        allCommandsDescription.append("/start ").append("have next pattern /start [username] [password] for auth on api, need to do once").append("\n");
         allCommandsDescription.append("/help ").append("return all commands with some description").append("\n");
         allCommandsDescription.append("/registration ").append("need to use next pattern /registration [username] [password] for " +
                 "registration on api").append("\n");
         allCommandsDescription.append("/authorization ").append("if you registered on api earlier, you should use that command with username and password").append("\n");
         allCommandsDescription.append("/mytasks ").append("show all your tasks").append("\n");
-        allCommandsDescription.append("/newtask [task]").append("adding task").append("\n");
+        allCommandsDescription.append("/newtask [task] [(optional) time , format {yyyy-MM-ddThh:mm:ss}]").append("adding task").append("\n");
         sendMessage(absSender, allCommandsDescription.toString(), chat.getId().toString());
     }
 }

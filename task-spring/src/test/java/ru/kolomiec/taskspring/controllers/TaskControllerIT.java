@@ -26,7 +26,7 @@ public class TaskControllerIT extends ControllerIntegrationTestBase {
 
     private final PersonRegistrationDTO testPerson = new PersonRegistrationDTO("username", "password");
 
-    private final TaskDTO testTask = new TaskDTO("test-task");
+    private final TaskDTO testTask = new TaskDTO("test-task", null);
     private final String TASK_CONTROLLER_URL = "/api/task";
     @Test
     public void shouldReturnZeroTask() throws Exception {
