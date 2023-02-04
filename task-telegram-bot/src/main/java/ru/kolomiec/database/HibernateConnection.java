@@ -42,7 +42,7 @@ public class HibernateConnection {
         Properties properties  = new Properties();
         properties.setProperty("hibernate.connection.driver_class", "org.postgresql.Driver");
         properties.setProperty("hibernate.connection.url", "jdbc:postgresql://localhost:5432/task_telegram");
-        properties.setProperty("hibernate.connection.username", "postgres");
+        properties.setProperty("hibernate.connection.username", "root");
         properties.setProperty("hibernate.connection.password", "root");
         return properties;
     }

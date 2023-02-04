@@ -12,7 +12,6 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="demo" target="17" />
-      <module name="Task-Website-API" target="1.5" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

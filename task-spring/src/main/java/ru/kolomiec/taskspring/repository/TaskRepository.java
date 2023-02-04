@@ -2,6 +2,7 @@ package ru.kolomiec.taskspring.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.kolomiec.taskspring.entity.Task;
 
@@ -22,4 +23,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query("from Task t where t.owner.username = :ownerUsername and t.id = :taskId")
     Optional<Task> findTaskByOwnerUsernameAndTaskId(String ownerUsername, Long taskId);
+
+    @Query(value = "select * from task where (to_do_time::time::text LIKE CONCAT (:time, '%')) AND " +
+            "(to_do_time::date::text LIKE :date)", nativeQuery = true)
+    Optional<List<Task>> findTaskByCurrentDateAndTime(@Param("date") String date,@Param("time") String time);
 }

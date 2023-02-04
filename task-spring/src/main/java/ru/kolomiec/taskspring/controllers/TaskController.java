@@ -27,7 +27,6 @@ public class TaskController {
     @PostMapping("/add-task")
     public ResponseEntity<ResponseMessageDTO> addNewTaskToPerson(@RequestBody TaskDTO taskDTO,
                                                                  @AuthenticationPrincipal PersonDetailsSecurityEntity authPerson) {
-        System.out.println("adding task");
         taskService.saveTaskToPerson(authPerson, taskDTO);
         return ResponseEntity.ok(new ResponseMessageDTO("new task is saved"));
     }
