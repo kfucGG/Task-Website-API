@@ -1,6 +1,6 @@
 package ru.kolomiec.requests;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.*;
 import ru.kolomiec.util.RequestUtil;
 
@@ -11,6 +11,13 @@ abstract public class AbstractApiRequest {
     protected final RequestUtil requestUtil = new RequestUtil();
 
     public String entityToJson(Object source) {
-        return new Gson().toJson(source);
+        ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
+        String objectInJson = null;
+        try {
+            objectInJson = objectMapper.writeValueAsString(source);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return objectInJson;
     }
 }

@@ -6,6 +6,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
+import ru.kolomiec.taskspring.entity.Task;
+
+import java.time.LocalDateTime;
 
 @SpringBootApplication
 public class TaskSpringApplication {
@@ -21,7 +24,7 @@ public class TaskSpringApplication {
 
 	@Bean
 	public ObjectMapper objectMapper() {
-		return new ObjectMapper();
+		return new ObjectMapper().findAndRegisterModules();
 	}
 	@Bean
 	public RestTemplate  restTemplate() {return new RestTemplate();}

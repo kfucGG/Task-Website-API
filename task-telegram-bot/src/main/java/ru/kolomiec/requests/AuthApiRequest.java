@@ -1,10 +1,9 @@
 package ru.kolomiec.requests;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.*;
 import ru.kolomiec.database.entity.AuthToken;
 import ru.kolomiec.dto.PersonDTO;
-import ru.kolomiec.util.RequestUtil;
 
 public class AuthApiRequest extends AbstractApiRequest{
 
@@ -25,8 +24,11 @@ public class AuthApiRequest extends AbstractApiRequest{
     }
 
     private AuthToken retrieveTokenFromResponseBody(ResponseBody responseBody) {
-        RequestUtil requestUtil = new RequestUtil();
-        return new Gson().fromJson(requestUtil.tryConvertResponseBodyToString(responseBody), AuthToken.class);
+        try {
+            return new ObjectMapper().readValue(requestUtil.tryConvertResponseBodyToString(responseBody), AuthToken.class);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
 }
