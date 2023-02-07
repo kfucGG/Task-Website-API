@@ -1,13 +1,9 @@
 package ru.kolomiec.taskspring.controllers;
 
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.web.servlet.MvcResult;
-import ru.kolomiec.taskspring.IntegrationTestBase;
 import ru.kolomiec.taskspring.dto.PersonRegistrationDTO;
 import ru.kolomiec.taskspring.security.jwt.JwtRequest;
 
@@ -18,7 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Sql(value = "classpath:/sqlQuery/drop-person-table.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = "classpath:/sqlQuery/create-person-table.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class AuthControllerIT extends ControllerIntegrationTestBase {
+public class AuthControllerIntegrationalTest extends ControllerIntegrationTestBase {
 
     private final PersonRegistrationDTO personRegistrationDTO = new PersonRegistrationDTO("test", "test");
 

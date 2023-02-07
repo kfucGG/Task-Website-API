@@ -1,7 +1,9 @@
 package ru.kolomiec.taskspring.services;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolomiec.taskspring.dto.TaskDTO;
 import ru.kolomiec.taskspring.entity.PersonDetailsSecurityEntity;
@@ -12,7 +14,10 @@ import ru.kolomiec.taskspring.facade.TaskFacade;
 import ru.kolomiec.taskspring.repository.TaskRepository;
 import ru.kolomiec.taskspring.services.interfaces.PersonService;
 import ru.kolomiec.taskspring.services.interfaces.TaskService;
+import ru.kolomiec.taskspring.util.TimeUtil;
 
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -49,6 +54,25 @@ public class TaskServiceImpl implements TaskService {
     public void deleteTaskOwnedByPerson(PersonDetailsSecurityEntity authenticatedPerson, Long taskId) {
         checkTaskIsOwnerByPerson(authenticatedPerson, taskId);
         taskRepository.deleteById(taskId);
+    }
+
+    public List<Task> getAllTasksWhichToDoTimeIsCurrentTime() {
+        List<Task> tasksWithCurrentDate = getAllTasksWhichToDoTimeIsCurrentDate();
+        List<Task> tasksWithCurrentTime = new ArrayList<>();
+        String currentTime = TimeUtil.getCurrentTimeInHoursAndMinutesFormat();
+        DateTimeFormatter hoursAndMinutesFormat = DateTimeFormatter.ofPattern("HH:mm");
+        if (tasksWithCurrentDate != null) {
+            for (Task t : tasksWithCurrentDate) {
+                if (hoursAndMinutesFormat.format(t.getToDoTime()).equals(currentTime))
+                    tasksWithCurrentTime.add(t);
+            }
+        }
+        return tasksWithCurrentTime;
+    }
+
+    public List<Task> getAllTasksWhichToDoTimeIsCurrentDate() {
+        String currentDate = TimeUtil.getCurrentDate();
+        return taskRepository.findAllTasksWhichToDoTimeIsCurrentDate(currentDate).orElse(null);
     }
 
     private void checkTaskIsOwnerByPerson(PersonDetailsSecurityEntity authenticatedPerson, Long taskId) {

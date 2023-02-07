@@ -1,17 +1,12 @@
 package ru.kolomiec.taskspring.controllers;
 
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlMergeMode;
-import org.springframework.test.web.servlet.MvcResult;
-import ru.kolomiec.taskspring.IntegrationTestBase;
 import ru.kolomiec.taskspring.dto.PersonRegistrationDTO;
 import ru.kolomiec.taskspring.dto.TaskDTO;
-import ru.kolomiec.taskspring.entity.Person;
-import ru.kolomiec.taskspring.security.jwt.JwtResponse;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -22,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql(value = "classpath:/sqlQuery/create-task-table.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = "classpath:/sqlQuery/drop-person-table.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = "classpath:/sqlQuery/create-person-table.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class TaskControllerIT extends ControllerIntegrationTestBase {
+public class TaskControllerITest extends ControllerIntegrationTestBase {
 
     private final PersonRegistrationDTO testPerson = new PersonRegistrationDTO("username", "password");
 
