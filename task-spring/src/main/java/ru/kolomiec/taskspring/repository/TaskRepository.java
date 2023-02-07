@@ -24,7 +24,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query("from Task t where t.owner.username = :ownerUsername and t.id = :taskId")
     Optional<Task> findTaskByOwnerUsernameAndTaskId(String ownerUsername, Long taskId);
 
-    @Query(value = "select * from task where (to_do_time::time::text LIKE CONCAT (:time, '%')) AND " +
-            "(to_do_time::date::text LIKE :date)", nativeQuery = true)
-    Optional<List<Task>> findTaskByCurrentDateAndTime(@Param("date") String date,@Param("time") String time);
+    @Query("from Task t where to_char(t.toDoTime, 'yyyy-MM-dd') = :currentDate")
+    Optional<List<Task>> findAllTasksWhichToDoTimeIsCurrentDate(String currentDate);
 }

@@ -1,6 +1,7 @@
 package ru.kolomiec.taskspring;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import ru.kolomiec.taskspring.entity.Task;
 
 import java.time.LocalDateTime;
+import java.util.TimeZone;
 
 @SpringBootApplication
 @EnableScheduling

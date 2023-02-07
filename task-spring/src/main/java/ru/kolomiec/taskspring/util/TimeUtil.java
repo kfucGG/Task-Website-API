@@ -11,7 +11,7 @@ import java.util.Date;
 public class TimeUtil {
 
     public static String getCurrentTimeInHoursAndMinutesFormat() {
-        SimpleDateFormat formatForHoursAndMinutes = new SimpleDateFormat("hh:mm");
+        SimpleDateFormat formatForHoursAndMinutes = new SimpleDateFormat("HH:mm");
         return formatForHoursAndMinutes.format(new Date());
     }
     public static String getCurrentDate() {

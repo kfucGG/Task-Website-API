@@ -28,7 +28,7 @@ public class Task implements Serializable {
     private String taskName;
 
     @JsonIgnore
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person owner;
 
