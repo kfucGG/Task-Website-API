@@ -21,7 +21,7 @@ abstract public class AbstractCommand extends BotCommand {
 
     public void sendMessageIfUserCannotUseCommand(AbsSender sender, Long chatId) {
         if (!personDAO.isPersonSavedInDb(chatId)) {
-            sendMessage(sender, "you can not use this command, /registration on /authorization on api"
+            sendMessage(sender, "you need to auth or reg on api,use commands  /registration on /authorization"
                     , chatId.toString());
         }
     }

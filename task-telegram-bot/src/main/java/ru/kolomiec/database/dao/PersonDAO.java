@@ -91,7 +91,7 @@ public class PersonDAO {
     public Person findPersonByUsername(String username) {
         Session session = null;
         try {
-            session = sessionFactory.getCurrentSession();
+            session = sessionFactory.openSession();
             session.getTransaction().begin();
             Query<Person> query = session.createQuery("from Person p where p.username = :username");
             query.setParameter("username", username);
@@ -100,8 +100,11 @@ public class PersonDAO {
             if (list.size() == 1)
                 return list.get(0);
             session.getTransaction().commit();
+            session.close();
         } catch(Exception e) {
+            System.out.println("roll back username not found");
             session.getTransaction().rollback();
+            session.close();
         }
         throw new RuntimeException("Person with such username not found");
     }

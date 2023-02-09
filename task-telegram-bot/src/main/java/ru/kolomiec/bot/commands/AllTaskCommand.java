@@ -21,7 +21,6 @@ public class AllTaskCommand extends AbstractCommand{
     }
     private String convertTaskArrayToString(TaskDTO[] tasks) {
         StringBuilder tasksInListFormat = new StringBuilder();
-        System.out.println(Arrays.toString(tasks));
         for (int i = 0; i < tasks.length; i++) {
             tasksInListFormat.append(i + 1).append(". ").append(tasks[i].getTaskName()).append(" time: ")
                     .append(tasks[i].getToDoTime()).append("\n");
