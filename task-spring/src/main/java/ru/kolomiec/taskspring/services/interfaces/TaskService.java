@@ -14,5 +14,7 @@ public interface TaskService {
 
     void saveTaskToPerson(PersonDetailsSecurityEntity authenticatedPerson, TaskDTO taskDTO);
 
+    void deleteTaskById(Long id);
+
     void deleteTaskOwnedByPerson(PersonDetailsSecurityEntity authenticatedPerson, Long taskId);
 }

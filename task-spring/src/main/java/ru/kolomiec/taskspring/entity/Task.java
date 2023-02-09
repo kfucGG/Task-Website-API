@@ -18,6 +18,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(of = {"taskName"})
 public class Task implements Serializable {
 
     @Id

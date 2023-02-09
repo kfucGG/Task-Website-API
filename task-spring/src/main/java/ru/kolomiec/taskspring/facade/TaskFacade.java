@@ -14,4 +14,6 @@ public class TaskFacade {
     public Task fromTaskDTOToTask(TaskDTO taskDTO) {
         return modelMapper.map(taskDTO, Task.class);
     }
+
+    public TaskDTO fromTaskToTaskDTO(Task task) { return modelMapper.map(task, TaskDTO.class); }
 }
