@@ -51,6 +51,12 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
+    public void deleteTaskById(Long id) {
+        taskRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
     public void deleteTaskOwnedByPerson(PersonDetailsSecurityEntity authenticatedPerson, Long taskId) {
         checkTaskIsOwnerByPerson(authenticatedPerson, taskId);
         taskRepository.deleteById(taskId);
