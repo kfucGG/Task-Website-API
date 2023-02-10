@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+
+  task-bot:
+    build: ./task-telegram-bot/
+    container_name: task-bot
+    environment:
+      - POSTGRES_USERNAME=compose-postgres
+      - POSTGRES_PASSWORD=compose-postgres
+      - POSTGRES_URL=jdbc:postgresql://db:5432/compose-postgres
+    depends_on:
+      db:
+        condition: service_healthy
+
+  task-spring:
+    container_name: task-spring
+    build: ./task-spring/
+    ports:
+      - "7070:7070"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
+      - SPRING_DATASOURCE_USERNAME=compose-postgres
+      - SPRING_DATASOURCE_PASSWORD=compose-postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
+    depends_on:
+      db:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+
+  db:
+    image: 'postgres:latest'
+    container_name: db
+    ports:
+      - "8000:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U compose-postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      - POSTGRES_USER=compose-postgres
+      - POSTGRES_PASSWORD=compose-postgres
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181

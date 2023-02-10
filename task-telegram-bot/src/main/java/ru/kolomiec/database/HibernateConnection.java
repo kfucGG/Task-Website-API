@@ -23,6 +23,7 @@ public class HibernateConnection {
         return sessionFactory;
     }
     private static Configuration getHibernateConfiguration() {
+        System.getenv().entrySet().stream().forEach(a -> System.out.println(a.getKey() +  " " + a.getValue()));
         Configuration configuration = new Configuration();
         configuration.addAnnotatedClass(Person.class);
         configuration.addAnnotatedClass(AuthToken.class);
@@ -32,10 +33,22 @@ public class HibernateConnection {
     }
     private static Properties getHibernateSettings() {
         Properties properties = new Properties();
+        if (!System.getenv("POSTGRES_URL").isBlank()) {
+            System.out.println("im using docker settings");
+            return getHibernateDockerDatasource();
+        }
         properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         properties.setProperty("hibernate.current_session_context_class", "thread");
         properties.setProperty("hibernate.show_sql", "true");
+        return properties;
+    }
+    private static Properties getHibernateDockerDatasource() {
+        Properties properties = new Properties();
+        properties.setProperty("hibernate.connection.driver_class", "org.postgresql.Driver");
+        properties.setProperty("hibernate.connection.url", System.getenv("POSTGRES_URL"));
+        properties.setProperty("hibernate.connection.username", System.getenv("POSTGRES_USERNAME"));
+        properties.setProperty("hibernate.connection.password", System.getenv("POSTGRES_PASSWORD"));
         return properties;
     }
     private static Properties getHibernateDatasource() {
