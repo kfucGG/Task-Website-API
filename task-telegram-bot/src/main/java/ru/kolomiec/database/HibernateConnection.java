@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.Environment;
 import ru.kolomiec.database.entity.AuthToken;
 import ru.kolomiec.database.entity.Person;
 
@@ -31,32 +32,30 @@ public class HibernateConnection {
         configuration.addProperties(getHibernateSettings());
         return configuration;
     }
-    private static Properties getHibernateSettings() {
-        Properties properties = new Properties();
-        if (!System.getenv("POSTGRES_URL").isBlank()) {
-            System.out.println("im using docker settings");
+    private static Properties getHibernateDatasource() {
+        Properties properties  = new Properties();
+        if (System.getenv("FROM_DOCKER") != null) {
             return getHibernateDockerDatasource();
         }
-        properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-        properties.setProperty("hibernate.current_session_context_class", "thread");
-        properties.setProperty("hibernate.show_sql", "true");
+        properties.setProperty(Environment.URL, "jdbc:postgresql://localhost:5432/task_telegram");
+        properties.setProperty(Environment.USER, "root");
+        properties.setProperty(Environment.PASS, "root");
         return properties;
     }
     private static Properties getHibernateDockerDatasource() {
         Properties properties = new Properties();
-        properties.setProperty("hibernate.connection.driver_class", "org.postgresql.Driver");
-        properties.setProperty("hibernate.connection.url", System.getenv("POSTGRES_URL"));
-        properties.setProperty("hibernate.connection.username", System.getenv("POSTGRES_USERNAME"));
-        properties.setProperty("hibernate.connection.password", System.getenv("POSTGRES_PASSWORD"));
+        properties.setProperty(Environment.URL, System.getenv("POSTGRES_URL"));
+        properties.setProperty(Environment.USER, System.getenv("POSTGRES_USERNAME"));
+        properties.setProperty(Environment.PASS, System.getenv("POSTGRES_PASSWORD"));
         return properties;
     }
-    private static Properties getHibernateDatasource() {
-        Properties properties  = new Properties();
-        properties.setProperty("hibernate.connection.driver_class", "org.postgresql.Driver");
-        properties.setProperty("hibernate.connection.url", "jdbc:postgresql://localhost:5432/task_telegram");
-        properties.setProperty("hibernate.connection.username", "root");
-        properties.setProperty("hibernate.connection.password", "root");
+    private static Properties getHibernateSettings() {
+        Properties properties = new Properties();
+        properties.setProperty(Environment.DRIVER, "org.postgresql.Driver");
+        properties.setProperty(Environment.DIALECT, "org.hibernate.dialect.PostgreSQLDialect");
+        properties.setProperty(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
+        properties.setProperty(Environment.SHOW_SQL, "true");
+        properties.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
         return properties;
     }
 }

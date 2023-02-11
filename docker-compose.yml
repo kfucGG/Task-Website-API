@@ -6,6 +6,7 @@ services:
     build: ./task-telegram-bot/
     container_name: task-bot
     environment:
+      - FROM_DOCKER=TRUE
       - POSTGRES_USERNAME=compose-postgres
       - POSTGRES_PASSWORD=compose-postgres
       - POSTGRES_URL=jdbc:postgresql://db:5432/compose-postgres
@@ -23,6 +24,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=compose-postgres
       - SPRING_DATASOURCE_PASSWORD=compose-postgres
       - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
+      - TZ=Europe/Moscow
+      - KAFKA_BOOTSTRAP_SERVER= kafka:9092
     depends_on:
       db:
         condition: service_healthy
@@ -51,6 +54,8 @@ services:
     image: wurstmeister/kafka
     ports:
       - "29092:29092"
+    depends_on:
+      - zookeeper
     environment:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
       KAFKA_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092

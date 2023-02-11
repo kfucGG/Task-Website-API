@@ -2,6 +2,7 @@ package ru.kolomiec.service;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.squareup.okhttp.Response;
 import org.glassfish.grizzly.http.util.HttpStatus;
 import ru.kolomiec.dto.TaskDTO;
@@ -10,7 +11,6 @@ import ru.kolomiec.util.RequestUtil;
 
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
 public class TaskService {
@@ -37,7 +37,7 @@ public class TaskService {
     }
     private TaskDTO[] fromJsonToTaskArray(String json) {
         try {
-            return new ObjectMapper().findAndRegisterModules().readValue(json, TaskDTO[].class);
+            return new ObjectMapper().registerModule(new JavaTimeModule()).findAndRegisterModules().readValue(json, TaskDTO[].class);
         } catch (Exception e) {
             e.printStackTrace();
         }

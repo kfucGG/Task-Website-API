@@ -28,6 +28,7 @@ public class TaskRemindService extends Thread {
             ConsumerRecords<String, String> records =
                     kafkaConsumer.poll(Duration.ofMillis(100));
             records.forEach(a -> {
+                System.out.println("gettings task " + a.value());
                 Person ownerOfTask = personDAO.findPersonByUsername(a.key());
                 sendTaskWhichTimeIsCurrentTime(ownerOfTask.getChatId(), a.value());
             });
