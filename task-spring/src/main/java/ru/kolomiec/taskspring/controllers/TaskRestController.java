@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/task")
 @RequiredArgsConstructor
-public class TaskController {
+public class TaskRestController {
 
     private final TaskService taskService;
     @GetMapping("/all-tasks")

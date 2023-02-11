@@ -6,12 +6,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import ru.kolomiec.taskspring.dto.PersonRegistrationDTO;
-import ru.kolomiec.taskspring.entity.Person;
-import ru.kolomiec.taskspring.facade.PersonFacade;
 import ru.kolomiec.taskspring.security.jwt.JwtRequest;
 import ru.kolomiec.taskspring.security.jwt.JwtResponse;
 import ru.kolomiec.taskspring.security.jwt.JwtUtil;
@@ -22,7 +18,7 @@ import ru.kolomiec.taskspring.services.interfaces.PersonService;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @Tag(name = "Authentication controller", description = "authentication controller with jwt token")
-public class AuthController {
+public class AuthRestController {
 
     private final JwtUtil jwtUtil;
     private final PersonService personService;
