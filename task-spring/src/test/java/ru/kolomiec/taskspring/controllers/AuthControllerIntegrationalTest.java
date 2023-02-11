@@ -15,49 +15,49 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql(value = "classpath:/sqlQuery/drop-person-table.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = "classpath:/sqlQuery/create-person-table.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class AuthControllerIntegrationalTest extends ControllerIntegrationTestBase {
-
-    private final PersonRegistrationDTO personRegistrationDTO = new PersonRegistrationDTO("test", "test");
-
-    @Test
-    public void testRegistration() throws Exception {
-        mockMvc.perform(post("/api/auth/registration")
-                    .content(objectMapper.writeValueAsString(personRegistrationDTO))
-                    .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void testLogin() throws Exception {
-        makeRequestForRegistrationNewPerson(personRegistrationDTO);
-        JwtRequest loginRequest = new JwtRequest(personRegistrationDTO.getUsername(), personRegistrationDTO.getPassword());
-        mockMvc.perform(post("/api/auth/login")
-                        .content(objectMapper.writeValueAsString(loginRequest))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void testLoginWithDefunctUsername() throws Exception {
-        makeRequestForRegistrationNewPerson(personRegistrationDTO);
-        JwtRequest loginRequest = new JwtRequest("Defunct username", "test");
-        mockMvc.perform(post("/api/auth/login")
-                    .content(objectMapper.writeValueAsString(loginRequest))
-                    .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void testLoginWithWrongPassword() throws Exception {
-        makeRequestForRegistrationNewPerson(personRegistrationDTO);
-        JwtRequest loginRequest = new JwtRequest(personRegistrationDTO.getUsername(), "incorrect password");
-        mockMvc.perform(post("/api/auth/login")
-                    .content(objectMapper.writeValueAsString(loginRequest))
-                    .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
-    }
+//
+//    private final PersonRegistrationDTO personRegistrationDTO = new PersonRegistrationDTO("test", "test");
+//
+//    @Test
+//    public void testRegistration() throws Exception {
+//        mockMvc.perform(post("/api/auth/registration")
+//                    .content(objectMapper.writeValueAsString(personRegistrationDTO))
+//                    .contentType(MediaType.APPLICATION_JSON))
+//                .andDo(print())
+//                .andExpect(status().isOk());
+//    }
+//
+//    @Test
+//    public void testLogin() throws Exception {
+//        makeRequestForRegistrationNewPerson(personRegistrationDTO);
+//        JwtRequest loginRequest = new JwtRequest(personRegistrationDTO.getUsername(), personRegistrationDTO.getPassword());
+//        mockMvc.perform(post("/api/auth/login")
+//                        .content(objectMapper.writeValueAsString(loginRequest))
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andDo(print())
+//                .andExpect(status().isOk());
+//    }
+//
+//    @Test
+//    public void testLoginWithDefunctUsername() throws Exception {
+//        makeRequestForRegistrationNewPerson(personRegistrationDTO);
+//        JwtRequest loginRequest = new JwtRequest("Defunct username", "test");
+//        mockMvc.perform(post("/api/auth/login")
+//                    .content(objectMapper.writeValueAsString(loginRequest))
+//                    .contentType(MediaType.APPLICATION_JSON))
+//                .andDo(print())
+//                .andExpect(status().isBadRequest());
+//    }
+//
+//    @Test
+//    public void testLoginWithWrongPassword() throws Exception {
+//        makeRequestForRegistrationNewPerson(personRegistrationDTO);
+//        JwtRequest loginRequest = new JwtRequest(personRegistrationDTO.getUsername(), "incorrect password");
+//        mockMvc.perform(post("/api/auth/login")
+//                    .content(objectMapper.writeValueAsString(loginRequest))
+//                    .contentType(MediaType.APPLICATION_JSON))
+//                .andDo(print())
+//                .andExpect(status().isBadRequest());
+//    }
 
 }

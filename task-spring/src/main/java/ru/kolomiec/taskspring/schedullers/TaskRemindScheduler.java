@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class TaskRemindScheduler {
 
 
@@ -35,7 +34,6 @@ public class TaskRemindScheduler {
         List<Task> list = taskService.getAllTasksWhichToDoTimeIsCurrentTime();
         if (!list.isEmpty()) {
             list.stream().forEach(a -> {
-                log.info(String.format("writing in kafka task, owner is %s, which time is current", a.getOwner().toString()));
                 kafkaTemplate.send("task", a.getOwner().getUsername(), a.getTaskName());
                 taskService.deleteTaskById(a.getId());
             });

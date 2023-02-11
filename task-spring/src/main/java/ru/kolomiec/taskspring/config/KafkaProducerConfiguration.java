@@ -16,15 +16,14 @@ import java.util.Map;
 
 @Configuration
 @EnableKafka
-public class KafkaConfiguration {
+public class KafkaProducerConfiguration {
 
-    @Value("${spring.kafka.bootstrap_service}")
-    private String BOOTSTRAP_ADDRESS;
-
+    @Value(value = "${spring.kafka.bootstrap-servers}")
+    private String bootstrap_service;
     @Bean
     public KafkaAdmin kafkaAdmin() {
         Map<String, Object> adminConfig = new HashMap<>();
-        adminConfig.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_ADDRESS);
+        adminConfig.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrap_service);
         return new KafkaAdmin(adminConfig);
     }
     @Bean
@@ -34,7 +33,7 @@ public class KafkaConfiguration {
     @Bean
     public ProducerFactory<String, String> producerFactory() {
         Map<String, Object> producerProperties = new HashMap<>();
-        producerProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_ADDRESS);
+        producerProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrap_service);
         producerProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         producerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         return new DefaultKafkaProducerFactory<>(producerProperties);

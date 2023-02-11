@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+
+  task-bot:
+    build: ./task-telegram-bot/
+    container_name: task-bot
+    environment:
+      - FROM_DOCKER=TRUE
+      - POSTGRES_USERNAME=compose-postgres
+      - POSTGRES_PASSWORD=compose-postgres
+      - POSTGRES_URL=jdbc:postgresql://db:5432/compose-postgres
+    depends_on:
+      db:
+        condition: service_healthy
+
+  task-spring:
+    container_name: task-spring
+    build: ./task-spring/
+    ports:
+      - "7070:7070"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
+      - SPRING_DATASOURCE_USERNAME=compose-postgres
+      - SPRING_DATASOURCE_PASSWORD=compose-postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
+      - TZ=Europe/Moscow
+      - KAFKA_BOOTSTRAP_SERVER= kafka:9092
+    depends_on:
+      db:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+
+  db:
+    image: 'postgres:latest'
+    container_name: db
+    ports:
+      - "8000:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U compose-postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      - POSTGRES_USER=compose-postgres
+      - POSTGRES_PASSWORD=compose-postgres
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "29092:29092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181

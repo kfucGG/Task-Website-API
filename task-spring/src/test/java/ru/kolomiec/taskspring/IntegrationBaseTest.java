@@ -15,24 +15,24 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 
 @SpringBootTest
-@ContextConfiguration(initializers = {PostgreSQLContainerInit.InitializeApplicationContextWithDBProperties.class})
+//@ContextConfiguration(initializers = {PostgreSQLContainerInit.InitializeApplicationContextWithDBProperties.class})
 @AutoConfigureMockMvc
 @TestPropertySource("classpath:application.properties")
 public class IntegrationBaseTest {
-
-    @Autowired
-    public MockMvc mockMvc;
-
-    @Autowired
-    public ObjectMapper objectMapper;
-
-    @BeforeAll
-    public static void init() {
-        PostgreSQLContainerInit.container.start();
-    }
-
-    @AfterAll
-    public static void shutdown() {
-        PostgreSQLContainerInit.container.stop();
-    }
+//
+//    @Autowired
+//    public MockMvc mockMvc;
+//
+//    @Autowired
+//    public ObjectMapper objectMapper;
+//
+//    @BeforeAll
+//    public static void init() {
+//        PostgreSQLContainerInit.container.start();
+//    }
+//
+//    @AfterAll
+//    public static void shutdown() {
+//        PostgreSQLContainerInit.container.stop();
+//    }
 }

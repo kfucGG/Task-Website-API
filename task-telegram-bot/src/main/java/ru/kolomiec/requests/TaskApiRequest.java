@@ -16,7 +16,7 @@ public class TaskApiRequest extends AbstractApiRequest {
     public Response saveNewTaskToApi(Long chatId, TaskDTO task) {
         Person person = personDAO.findPersonByChatId(chatId);
         Request request = new Request.Builder()
-                .url(BASE_API_URL + "/task/add-task")
+                .url(getBaseApiUrl() + "/task/add-task")
                 .header("Authorization", person.getAuthToken().getToken())
                 .post(RequestBody.create(applicationJsonMediaType, entityToJson(task)))
                 .build();
@@ -26,7 +26,7 @@ public class TaskApiRequest extends AbstractApiRequest {
     public Response getAllTaskFromApi(Long chatId) {
         Person person = personDAO.findPersonByChatId(chatId);
         Request request = new Request.Builder()
-                .url(BASE_API_URL + "/task/all-tasks")
+                .url(getBaseApiUrl() + "/task/all-tasks")
                 .header("Authorization", person.getAuthToken().getToken())
                 .build();
         return requestUtil.tryRequest(request);
