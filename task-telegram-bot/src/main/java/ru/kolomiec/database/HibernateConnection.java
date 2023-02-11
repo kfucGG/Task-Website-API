@@ -24,7 +24,6 @@ public class HibernateConnection {
         return sessionFactory;
     }
     private static Configuration getHibernateConfiguration() {
-        System.getenv().entrySet().stream().forEach(a -> System.out.println(a.getKey() +  " " + a.getValue()));
         Configuration configuration = new Configuration();
         configuration.addAnnotatedClass(Person.class);
         configuration.addAnnotatedClass(AuthToken.class);
