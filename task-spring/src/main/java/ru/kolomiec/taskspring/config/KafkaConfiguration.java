@@ -33,7 +33,6 @@ public class KafkaConfiguration {
     @Bean
     public ProducerFactory<String, String> producerFactory() {
         Map<String, Object> producerProperties = new HashMap<>();
-        producerProperties.put("host.name", "kafka");
         producerProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrap_service);
         producerProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         producerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
