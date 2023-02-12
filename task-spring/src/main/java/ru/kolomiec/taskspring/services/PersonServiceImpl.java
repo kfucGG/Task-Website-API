@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kolomiec.taskspring.aspects.LogPersonService;
 import ru.kolomiec.taskspring.dto.PersonRegistrationDTO;
 import ru.kolomiec.taskspring.entity.Person;
 import ru.kolomiec.taskspring.entity.Task;
@@ -20,6 +21,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@LogPersonService
 public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository personRepository;
@@ -32,16 +34,16 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     @Transactional
-    public void savePerson(Person person) {
+    public Person savePerson(Person person) {
         person.setPassword(encodePassword(person.getPassword()));
-        personRepository.save(person);
+        return personRepository.save(person);
     }
 
     @Override
     @Transactional
-    public void savePerson(PersonRegistrationDTO personRegistration) {
+    public Person savePerson(PersonRegistrationDTO personRegistration) {
         personRegistration.setPassword(encodePassword(personRegistration.getPassword()));
-        personRepository.save(personFacade.fromRegistrationDTOtoPerson(personRegistration));
+        return personRepository.save(personFacade.fromRegistrationDTOtoPerson(personRegistration));
     }
 
     @Override
