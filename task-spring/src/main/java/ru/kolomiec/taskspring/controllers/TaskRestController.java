@@ -1,7 +1,12 @@
 package ru.kolomiec.taskspring.controllers;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +18,7 @@ import ru.kolomiec.taskspring.services.interfaces.TaskService;
 
 import java.util.List;
 
+@Tag(name = "Task Controller", description = "Controllers which allows add/get/delete tasks")
 @RestController
 @RequestMapping("/api/task")
 @RequiredArgsConstructor
@@ -20,11 +26,21 @@ public class TaskRestController {
 
     private final TaskService taskService;
     @GetMapping("/all-tasks")
+    @Operation(summary = "return all task which owner by auth person")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "returns tasks"),
+            @ApiResponse(responseCode = "400", description = "person does not have tasks")
+    })
     public ResponseEntity<List<Task>> getAllTasks(@AuthenticationPrincipal PersonDetailsSecurityEntity authPerson) {
         return ResponseEntity.ok(taskService.getAllTaskByPersonUsername(authPerson.getUsername()));
     }
 
     @PostMapping("/add-task")
+    @Operation(summary = "add task to auth person")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "task is added"),
+            @ApiResponse(responseCode = "400", description = "not valid task")
+    })
     public ResponseEntity<ResponseMessageDTO> addNewTaskToPerson(@RequestBody TaskDTO taskDTO,
                                                                  @AuthenticationPrincipal PersonDetailsSecurityEntity authPerson) {
         System.out.println(taskDTO.toString());
@@ -33,6 +49,11 @@ public class TaskRestController {
     }
 
     @DeleteMapping("/{taskId}/delete-task")
+    @Operation(summary = "delete task by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "delete task by id"),
+            @ApiResponse(responseCode = "400", description = "person dont have task with such id")
+    })
     public ResponseEntity<ResponseMessageDTO> deletePersonTask(@AuthenticationPrincipal PersonDetailsSecurityEntity authPerson,
                                                                @PathVariable("taskId") Long taskId) {
         taskService.deleteTaskOwnedByPerson(authPerson, taskId);
