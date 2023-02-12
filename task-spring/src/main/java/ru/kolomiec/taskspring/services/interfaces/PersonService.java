@@ -10,8 +10,8 @@ public interface PersonService {
 
     Person findByUsername(String username);
 
-    void savePerson(Person person);
-    void savePerson(PersonRegistrationDTO personRegistrationDTO);
+    Person savePerson(Person person);
+    Person savePerson(PersonRegistrationDTO personRegistrationDTO);
 
     void deletePerson(Long id);
 

@@ -5,6 +5,7 @@ import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kolomiec.taskspring.aspects.LogTaskService;
 import ru.kolomiec.taskspring.dto.TaskDTO;
 import ru.kolomiec.taskspring.entity.PersonDetailsSecurityEntity;
 import ru.kolomiec.taskspring.entity.Task;
@@ -24,6 +25,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@LogTaskService
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
