@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class AuthRestController {
             @ApiResponse(responseCode = "200", description = "Person is auth, return jwt token"),
             @ApiResponse(responseCode = "400", description = "Wrong password or defunct username")
     })
-    public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest jwtRequest) {
+    public ResponseEntity<JwtResponse> login(@RequestBody @Valid JwtRequest jwtRequest) {
         personService.isProcessAuthPersonCredentialsIsValid(jwtRequest);
         return ResponseEntity.ok(jwtUtil.generateToken(jwtRequest.getUsername()));
     }
@@ -42,7 +43,7 @@ public class AuthRestController {
             @ApiResponse(responseCode = "200", description = "New person is reg and token is returned"),
             @ApiResponse(responseCode = "400", description = "Not valid person fields")
     })
-    public ResponseEntity<JwtResponse> registration(@RequestBody PersonRegistrationDTO person) {
+    public ResponseEntity<JwtResponse> registration(@RequestBody @Valid PersonRegistrationDTO person) {
         personService.savePerson(person);
         return ResponseEntity.ok(jwtUtil.generateToken(person.getUsername()));
     }
