@@ -16,9 +16,7 @@ import ru.kolomiec.taskspring.security.jwt.JwtFilter;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
-
-    //todo For swagger-ui without authentication (mb make annotation)
-    private static final String[] AUTH_WHITELIST = {
+    private static final String[] SWAGGER_UI_WHITE_LIST = {
             "/v2/api-docs",
             "/swagger-resources",
             "/swagger-resources/**",
@@ -36,7 +34,7 @@ public class SecurityConfiguration {
         http.cors().and().csrf().disable();
         http.authorizeRequests(registry -> {
            registry.requestMatchers("/api/auth/*").permitAll();
-           registry.requestMatchers(AUTH_WHITELIST).permitAll();
+           registry.requestMatchers(SWAGGER_UI_WHITE_LIST).permitAll();
            registry.anyRequest().authenticated();
         });
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

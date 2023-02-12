@@ -17,7 +17,7 @@ public interface PersonService {
 
     void addTaskToPerson(Task task, Person person);
 
-    void isProcessAuthPersonPrincipalIsValid(JwtRequest processAuthPerson);
+    void isProcessAuthPersonCredentialsIsValid(JwtRequest processAuthPerson);
 
 
 }

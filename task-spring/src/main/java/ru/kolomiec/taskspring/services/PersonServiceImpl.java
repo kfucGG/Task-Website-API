@@ -58,7 +58,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public void isProcessAuthPersonPrincipalIsValid(JwtRequest jwtRequest) {
+    public void isProcessAuthPersonCredentialsIsValid(JwtRequest jwtRequest) {
         if (!passwordEncoder.matches(jwtRequest.getPassword(), findByUsername(jwtRequest.getUsername()).getPassword())) {
             throw new BadCredentialsException("bad password");
         }

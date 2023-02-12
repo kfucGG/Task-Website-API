@@ -32,7 +32,7 @@ public class AuthRestController {
             @ApiResponse(responseCode = "400", description = "Wrong password or defunct username")
     })
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest jwtRequest) {
-        personService.isProcessAuthPersonPrincipalIsValid(jwtRequest);
+        personService.isProcessAuthPersonCredentialsIsValid(jwtRequest);
         return ResponseEntity.ok(jwtUtil.generateToken(jwtRequest.getUsername()));
     }
 

@@ -31,7 +31,7 @@ public class TaskServiceImpl implements TaskService {
     private final TaskFacade taskFacade;
     @Override
     public List<Task> getAllTaskByUserId(Long id) {
-        return taskRepository.findAllByOwnerId(id).orElseThrow(() -> new NullPointerException());//TODO custom exception
+        return taskRepository.findAllByOwnerId(id).orElseThrow(() -> new EmptyPersonTasksException("you have not tasks"));
     }
 
     @Override
