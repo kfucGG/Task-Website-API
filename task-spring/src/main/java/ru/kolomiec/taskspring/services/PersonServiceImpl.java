@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kolomiec.taskspring.aspects.LogPersonService;
+import ru.kolomiec.taskspring.aspects.ServiceLog;
 import ru.kolomiec.taskspring.dto.PersonRegistrationDTO;
 import ru.kolomiec.taskspring.entity.Person;
 import ru.kolomiec.taskspring.entity.Task;
@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-@LogPersonService
+@ServiceLog
 public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository personRepository;
