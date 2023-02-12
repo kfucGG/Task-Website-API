@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public class TaskRestController {
             @ApiResponse(responseCode = "200", description = "task is added"),
             @ApiResponse(responseCode = "400", description = "not valid task")
     })
-    public ResponseEntity<ResponseMessageDTO> addNewTaskToPerson(@RequestBody TaskDTO taskDTO,
+    public ResponseEntity<ResponseMessageDTO> addNewTaskToPerson(@RequestBody @Valid TaskDTO taskDTO,
                                                                  @AuthenticationPrincipal PersonDetailsSecurityEntity authPerson) {
         System.out.println(taskDTO.toString());
         taskService.saveTaskToPerson(authPerson, taskDTO);
