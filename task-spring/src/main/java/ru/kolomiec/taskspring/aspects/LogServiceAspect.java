@@ -16,10 +16,11 @@ import java.util.Arrays;
 public class LogServiceAspect {
 
     @Pointcut("execution( * ru.kolomiec.taskspring.services.*.*(..)))")
-    public void personServiceMethods(){};
+    public void serviceMethods(){};
     @Around("@target(ServiceLog) && personServiceMethods()")
-    public Object logPersonServiceMethod(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object loggingServiceMethod(ProceedingJoinPoint joinPoint) throws Throwable {
+        Object execResult = joinPoint.proceed();
         log.info(joinPoint.getSignature().getName() + " " + Arrays.toString(joinPoint.getArgs()));
-        return joinPoint.proceed();
+        return execResult;
     }
 }
