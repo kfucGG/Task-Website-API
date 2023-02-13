@@ -17,7 +17,7 @@ public class LogServiceAspect {
 
     @Pointcut("execution( * ru.kolomiec.taskspring.services.*.*(..)))")
     public void serviceMethods(){};
-    @Around("@target(ServiceLog) && personServiceMethods()")
+    @Around("@target(ServiceLog) && serviceMethods()")
     public Object loggingServiceMethod(ProceedingJoinPoint joinPoint) throws Throwable {
         Object execResult = joinPoint.proceed();
         log.info(joinPoint.getSignature().getName() + " " + Arrays.toString(joinPoint.getArgs()));
