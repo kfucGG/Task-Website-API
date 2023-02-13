@@ -15,10 +15,12 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.kolomiec.taskspring.aspects.LogExceptionHandlerAdvice;
 import ru.kolomiec.taskspring.exceptions.ResponseException;
 
 
 @RestControllerAdvice
+@LogExceptionHandlerAdvice
 public class ValidationExceptionHandlerAdvice {
 
     @ExceptionHandler

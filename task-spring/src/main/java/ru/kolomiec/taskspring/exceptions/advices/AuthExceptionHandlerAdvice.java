@@ -7,6 +7,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.kolomiec.taskspring.aspects.LogExceptionHandlerAdvice;
 import ru.kolomiec.taskspring.exceptions.ResponseException;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.util.Date;
 
 
 @RestControllerAdvice
+@LogExceptionHandlerAdvice
 public class AuthExceptionHandlerAdvice {
 
 

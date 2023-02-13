@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.kolomiec.taskspring.aspects.LogExceptionHandlerAdvice;
 import ru.kolomiec.taskspring.exceptions.ResponseException;
 import ru.kolomiec.taskspring.exceptions.customexceptions.EmptyPersonTasksException;
 import ru.kolomiec.taskspring.exceptions.customexceptions.PersonHaveNotSuchTaskException;
@@ -12,6 +13,7 @@ import ru.kolomiec.taskspring.exceptions.customexceptions.PersonHaveNotSuchTaskE
 import java.util.Date;
 
 @RestControllerAdvice
+@LogExceptionHandlerAdvice
 public class TaskExceptionHandlerAdvice {
 
 
