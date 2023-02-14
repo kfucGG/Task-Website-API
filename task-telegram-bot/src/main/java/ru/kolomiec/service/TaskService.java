@@ -25,6 +25,15 @@ public class TaskService {
             taskApiRequest.saveNewTaskToApi(chatId, buildTaskDTOFromArrayOfString(userInput));
         }
     }
+
+    public void saveNewTaskToApi(Long chatId, TaskDTO taskDTO) {
+        Response response = taskApiRequest.saveNewTaskToApi(chatId, taskDTO);
+        if (response.code() == HttpStatus.FORBIDDEN_403.getStatusCode()) {
+            authService.refreshToken(chatId);
+            taskApiRequest.saveNewTaskToApi(chatId, taskDTO);
+        }
+    }
+
     public TaskDTO[] getAllTasksFromApi(Long chatId) {
         Response response = taskApiRequest.getAllTaskFromApi(chatId);
         RequestUtil requestUtil = new RequestUtil();

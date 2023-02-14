@@ -14,9 +14,9 @@ public class StartCommand extends AbstractCommand {
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
         if (!personDAO.isPersonSavedInDb(chat.getId())) {
-            sendMessage(absSender, "you are auth", chat.getId().toString());
-        } else {
             sendMessage(absSender, "you need to call /registration [username] [password] or /auth", chat.getId().toString());
+        } else {
+            sendMessage(absSender, "you are auth", chat.getId().toString());
         }
     }
 }
