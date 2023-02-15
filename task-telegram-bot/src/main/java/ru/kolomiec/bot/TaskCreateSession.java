@@ -13,5 +13,5 @@ public class TaskCreateSession {
 }
 
 enum TimeToDo {
-    TODAY, NOTIME, ANOTHER_DAY
+    TODAY, ANOTHER_DAY
 }

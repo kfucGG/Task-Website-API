@@ -24,10 +24,8 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class TaskRemindScheduler {
 
-
     private final TaskServiceImpl taskService;
     private final KafkaTemplate<String, String> kafkaTemplate;
-
     @Async
     @Scheduled(timeUnit = TimeUnit.SECONDS, fixedRate = 20)
     public void isTimeToDoTask() {

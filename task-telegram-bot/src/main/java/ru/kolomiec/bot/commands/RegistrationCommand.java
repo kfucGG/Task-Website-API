@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.bots.AbsSender;
+import ru.kolomiec.util.ReplyKeyboardUtil;
 
 import java.util.List;
 
@@ -22,15 +23,7 @@ public class RegistrationCommand extends AbstractCommand {
     @SneakyThrows
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
         authService.registration(buildPersonFromArrayOfStringAndChatId(strings, chat));
-        absSender.execute(new SendMessage().builder().text("your token is saved in db, you are registered").chatId(chat.getId()).replyMarkup(getKeyboard()).build());
-    }
-    private ReplyKeyboardMarkup getKeyboard() {
-        ReplyKeyboardMarkup markup = new ReplyKeyboardMarkup();
-        KeyboardRow row1 = new KeyboardRow();
-        KeyboardButton button = new KeyboardButton();
-        row1.add("new task");
-        row1.add("all tasks");
-        markup.setKeyboard(List.of(row1));
-        return markup;
+        absSender.execute(new SendMessage().builder().text("Вы зарегистрированы!")
+                .chatId(chat.getId()).replyMarkup(ReplyKeyboardUtil.getMainKeyboard()).build());
     }
 }

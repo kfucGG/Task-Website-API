@@ -13,6 +13,7 @@ import ru.kolomiec.bot.commands.*;
 import ru.kolomiec.database.dao.PersonDAO;
 import ru.kolomiec.dto.TaskDTO;
 import ru.kolomiec.service.TaskService;
+import ru.kolomiec.util.ReplyKeyboardUtil;
 
 import java.text.SimpleDateFormat;
 import java.time.DateTimeException;
@@ -23,6 +24,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class MainBot extends TelegramLongPollingCommandBot {
@@ -37,7 +40,6 @@ public class MainBot extends TelegramLongPollingCommandBot {
         register(new StartCommand("/start", "start command"));
         register(new HelpCommand("/help", "shows all commands"));
         register(new RegistrationCommand("/registration", "registration on api"));
-        register(new AuthenticationCommand("/authentication", "authentication on api"));
     }
     @Override
     public String getBotUsername() {
@@ -53,118 +55,83 @@ public class MainBot extends TelegramLongPollingCommandBot {
     @Override
     @SneakyThrows
     public void processNonCommandUpdate(Update update)  {
-        System.out.println("in non proccess method");
         Message message = update.getMessage();
         Long chatId = message.getChatId();
         if (!personDAO.isPersonSavedInDb(chatId)) {
-            System.out.println("person does not exists");
-            execute(new SendMessage().builder().chatId(chatId).text("you are not auth").build());
+            execute(new SendMessage().builder().chatId(chatId).text("Вы не аутентифицированы на API").build());
             return;
         }
 
-        if (update.getMessage().getText().equals("all tasks")) {
-            System.out.println("person is want to get all tasks");
+        if (update.getMessage().getText().contains("all tasks")) {
             TaskDTO[] tasks = taskService.getAllTasksFromApi(chatId);
+            sendKeyboard(update,"Все ваши задачи: \n%s".formatted(taskService.arrayDTOToString(tasks)), ReplyKeyboardUtil.getMainKeyboard());
             taskCreateSession = null;
-            sendKeyboard(update,"all your task: %s".formatted(Arrays.toString(tasks)), getMainKeyboard());
             return;
         }
 
-        if (update.getMessage().getText().equals("new task")) {
-            System.out.println("person is decided to create new task");
+        if (update.getMessage().getText().contains("new task")) {
             taskCreateSession = new TaskCreateSession();
             isNextMessageIsTask = true;
-            try {
-                execute(new SendMessage().builder().chatId(chatId).text("enter task name").build());
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
-            }
+            execute(new SendMessage().builder().chatId(chatId).text("Введите название задачи").build());
             return;
         }
 
         if (isNextMessageIsTask) {
-            System.out.println("user input a task name");
-            String text = update.getMessage().getText();
-            taskCreateSession.setTaskDTO(new TaskDTO(text, null));
+            taskCreateSession.setTaskDTO(new TaskDTO(message.getText(), null));
             isNextMessageIsTask = false;
-            sendKeyboard(update, "When task should be done?", getChooseTaskTimeKeyboard());
+            sendKeyboard(update, "Когда задача должна быть выполнена(вам придет напоминание)", ReplyKeyboardUtil.getChooseTaskTimeKeyboard());
             return;
         }
+        if (taskCreateSession != null) {
 
-        if (message.getText().equals("another day")) {
-            System.out.println("message is another day");
-            taskCreateSession.setTimeToDo(TimeToDo.ANOTHER_DAY);
-            execute(SendMessage.builder().chatId(chatId).text("input date in format yyyy-MM-ddTHH:mm:ss").build());
-            return;
-        }
+            if (message.getText().contains("another day")) {
+                taskCreateSession.setTimeToDo(TimeToDo.ANOTHER_DAY);
+                execute(SendMessage.builder().chatId(chatId).text("Введите дату и время в след формате yyyy-MM-ddTHH:mm:ss").build());
+                return;
+            }
 
-        if (message.getText().equals("today")) {
-            System.out.println("message is today");
-            taskCreateSession.setTimeToDo(TimeToDo.TODAY);
-            execute(SendMessage
-                    .builder()
-                    .chatId(chatId)
-                    .text("Input time in format HH:mm or HH:mm:ss").build());
-            return;
-        }
+            if (message.getText().contains("today")) {
+                taskCreateSession.setTimeToDo(TimeToDo.TODAY);
+                execute(SendMessage
+                        .builder()
+                        .chatId(chatId)
+                        .text("Введите время в следующем формате: HH:mm or HH:mm:ss").build());
+                return;
+            }
 
-        if (message.getText().equals("no time")) {
-            System.out.println("message is no time");
-            taskService.saveNewTaskToApi(chatId, taskCreateSession.getTaskDTO());
-            sendKeyboard(update, "task is saved without time", getMainKeyboard());
-            taskCreateSession = null;
-            return;
-        }
+            if (message.getText().contains("no time")) {
+                taskService.saveNewTaskToApi(chatId, taskCreateSession.getTaskDTO());
+                sendKeyboard(update, "Задача сохранена без времени!", ReplyKeyboardUtil.getMainKeyboard());
+                taskCreateSession = null;
+                return;
+            }
 
-        if (taskCreateSession.getTimeToDo().compareTo(TimeToDo.ANOTHER_DAY) == 0) {
-            System.out.println("another day");
-            LocalDateTime taskTime = LocalDateTime.parse(message.getText(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-            taskCreateSession.setTaskDTO(new TaskDTO(taskCreateSession.getTaskDTO().getTaskName(), taskTime));
-            taskService.saveNewTaskToApi(chatId, taskCreateSession.getTaskDTO());
-            taskCreateSession = null;
-            sendKeyboard(update, "Task is saved", getMainKeyboard());
-            return;
-        }
+            if (taskCreateSession.getTimeToDo().compareTo(TimeToDo.ANOTHER_DAY) == 0) {
+                LocalDateTime taskTime = LocalDateTime.parse(message.getText(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                taskCreateSession.setTaskDTO(new TaskDTO(taskCreateSession.getTaskDTO().getTaskName(), taskTime));
+                taskService.saveNewTaskToApi(chatId, taskCreateSession.getTaskDTO());
+                taskCreateSession = null;
+                sendKeyboard(update, "Задача сохранена!", ReplyKeyboardUtil.getMainKeyboard());
+                return;
+            }
 
-        if (taskCreateSession.getTimeToDo().compareTo(TimeToDo.TODAY) == 0) {
-            System.out.println("today");
-            System.out.println("message is" + message.getText());
-            var time = LocalTime.parse(message.getText());
-            System.out.println("time is" + time);
-            taskCreateSession.setTaskDTO(new TaskDTO(taskCreateSession.getTaskDTO().getTaskName(), time.atDate(LocalDate.now())));
-            taskService.saveNewTaskToApi(chatId, taskCreateSession.getTaskDTO());
-            taskCreateSession = null;
-            sendKeyboard(update, "Task is saved", getMainKeyboard());
-            return;
+            if (taskCreateSession.getTimeToDo().compareTo(TimeToDo.TODAY) == 0) {
+                taskCreateSession.setTaskDTO(new TaskDTO(taskCreateSession.getTaskDTO().getTaskName(),
+                        LocalTime.parse(message.getText()).atDate(LocalDate.now())));
+                taskService.saveNewTaskToApi(chatId, taskCreateSession.getTaskDTO());
+                taskCreateSession = null;
+                sendKeyboard(update, "Задача сохранена!", ReplyKeyboardUtil.getMainKeyboard());
+                return;
+            }
         }
-        sendKeyboard(update, "Choose option", getMainKeyboard());
+        sendKeyboard(update, "Выберите функцию", ReplyKeyboardUtil.getMainKeyboard());
     }
+
+    @SneakyThrows
     private void sendKeyboard(Update update, String text, ReplyKeyboard keyBoard) {
-        try {
-            execute(new SendMessage().builder().text(text).chatId(update
+        execute(new SendMessage().builder().text(text).chatId(update
                             .getMessage()
                             .getChatId())
                     .replyMarkup(keyBoard).build());
-        } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    private ReplyKeyboardMarkup getMainKeyboard() {
-        ReplyKeyboardMarkup markup = new ReplyKeyboardMarkup();
-        KeyboardRow row1 = new KeyboardRow();
-        row1.add("new task");
-        row1.add("all tasks");
-        markup.setKeyboard(List.of(row1));
-        return markup;
-    }
-
-    private ReplyKeyboardMarkup getChooseTaskTimeKeyboard() {
-        ReplyKeyboardMarkup markup = new ReplyKeyboardMarkup();
-        KeyboardRow row1 = new KeyboardRow();
-        row1.add("no time");
-        row1.add("today");
-        row1.add("another day");
-        markup.setKeyboard(List.of(row1));
-        return markup;
     }
 }
