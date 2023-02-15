@@ -1,8 +1,16 @@
 package ru.kolomiec.bot.commands;
 
+import lombok.SneakyThrows;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.bots.AbsSender;
+import ru.kolomiec.util.ReplyKeyboardUtil;
+
+import java.util.List;
 
 
 public class RegistrationCommand extends AbstractCommand {
@@ -12,8 +20,10 @@ public class RegistrationCommand extends AbstractCommand {
     }
 
     @Override
+    @SneakyThrows
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
         authService.registration(buildPersonFromArrayOfStringAndChatId(strings, chat));
-        sendMessage(absSender, "your token is saved in db, you are registered", chat.getId().toString());
+        absSender.execute(new SendMessage().builder().text("Вы зарегистрированы!")
+                .chatId(chat.getId()).replyMarkup(ReplyKeyboardUtil.getMainKeyboard()).build());
     }
 }
