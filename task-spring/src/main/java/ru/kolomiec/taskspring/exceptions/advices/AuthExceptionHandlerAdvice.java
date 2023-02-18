@@ -19,11 +19,11 @@ public class AuthExceptionHandlerAdvice {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ResponseException> badPasswordHandler(BadCredentialsException ex) {
-        return new ResponseEntity(new ResponseException(ex.getMessage(), new Date()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(new ResponseException(ex.getMessage(), new Date()), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ResponseException> defunctUsername(UsernameNotFoundException ex) {
-        return new ResponseEntity<>(new ResponseException(ex.getMessage(), new Date()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ResponseException(ex.getMessage(), new Date()), HttpStatus.UNAUTHORIZED);
     }
 }

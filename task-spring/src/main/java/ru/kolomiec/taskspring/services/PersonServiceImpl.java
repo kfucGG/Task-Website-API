@@ -27,7 +27,8 @@ public class PersonServiceImpl implements PersonService {
     private final PasswordEncoder passwordEncoder;
     @Override
     public Person findByUsername(String username) {
-        return personRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username does not exist"));
+        return personRepository.findByUsername(username).orElseThrow(
+                () -> new UsernameNotFoundException("Username does not exist"));
     }
 
     @Override
@@ -40,8 +41,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     @Transactional
     public Person savePerson(PersonRegistrationDTO personRegistration) {
-        personRegistration.setPassword(encodePassword(personRegistration.getPassword()));
-        return personRepository.save(personRegistration.toPerson());
+        return savePerson(personRegistration.toPerson());
     }
 
     @Override

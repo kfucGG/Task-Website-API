@@ -64,6 +64,6 @@ public class TaskRestController {
     public ResponseEntity<ResponseMessageDTO> deletePersonTask(@AuthenticationPrincipal PersonDetailsSecurityEntity authPerson,
                                                                @PathVariable("taskId") Long taskId) {
         taskService.deleteTaskOwnedByPerson(authPerson, taskId);
-        return ResponseEntity.ok(new ResponseMessageDTO(new StringBuilder("task with taskId ").append(taskId).append("is deleted").toString()));
+        return ResponseEntity.ok(new ResponseMessageDTO("task with id %s is deleted".formatted(taskId)));
     }
 }

@@ -44,7 +44,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public void saveTaskToPerson(PersonDetailsSecurityEntity authenticatedPerson, TaskDTO taskDTO) {
         Task newTaskToPerson = taskDTO.toTask();
-        newTaskToPerson.setOwner(personService.findByUsername(authenticatedPerson.getUsername()));
+        newTaskToPerson.setOwner(authenticatedPerson.getPerson());
         taskRepository.save(newTaskToPerson);
     }
 
