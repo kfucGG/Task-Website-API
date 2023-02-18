@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolomiec.taskspring.dto.TaskDTO;
 import ru.kolomiec.taskspring.entity.Task;
-import ru.kolomiec.taskspring.facade.TaskFacade;
 import ru.kolomiec.taskspring.repository.TaskRepository;
 import ru.kolomiec.taskspring.services.TaskServiceImpl;
 import ru.kolomiec.taskspring.util.TimeUtil;

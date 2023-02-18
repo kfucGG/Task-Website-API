@@ -9,18 +9,14 @@ import ru.kolomiec.taskspring.entity.PersonDetailsSecurityEntity;
 import ru.kolomiec.taskspring.entity.Task;
 import ru.kolomiec.taskspring.exceptions.customexceptions.EmptyPersonTasksException;
 import ru.kolomiec.taskspring.exceptions.customexceptions.PersonHaveNotSuchTaskException;
-import ru.kolomiec.taskspring.facade.TaskFacade;
 import ru.kolomiec.taskspring.repository.TaskRepository;
 import ru.kolomiec.taskspring.services.interfaces.PersonService;
 import ru.kolomiec.taskspring.services.interfaces.TaskService;
 import ru.kolomiec.taskspring.util.TimeUtil;
 
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -31,7 +27,7 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
     private final PersonService personService;
-    private final TaskFacade taskFacade;
+
     @Override
     public List<Task> getAllTaskByUserId(Long id) {
         return taskRepository.findAllByOwnerId(id).orElseThrow(() -> new EmptyPersonTasksException("you have not tasks"));
@@ -47,7 +43,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public void saveTaskToPerson(PersonDetailsSecurityEntity authenticatedPerson, TaskDTO taskDTO) {
-        Task newTaskToPerson = taskFacade.fromTaskDTOToTask(taskDTO);
+        Task newTaskToPerson = taskDTO.toTask();
         newTaskToPerson.setOwner(personService.findByUsername(authenticatedPerson.getUsername()));
         taskRepository.save(newTaskToPerson);
     }
@@ -66,7 +62,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     public List<Task> getAllTasksWhichToDoTimeIsCurrentTime() {
-        return taskRepository.finaAllTasksWhichToDoTimeIsCurrentDateAndTime(
+        return taskRepository.findAllTasksWhichToDoTimeIsCurrentDateAndTime(
                 LocalTime.parse(TimeUtil.getCurrentTimeInHoursAndMinutesFormat())
         ).orElse(Collections.emptyList());
     }
