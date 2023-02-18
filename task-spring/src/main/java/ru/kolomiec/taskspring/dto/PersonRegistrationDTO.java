@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import ru.kolomiec.taskspring.entity.Person;
 
 import java.io.Serializable;
 
@@ -24,4 +25,11 @@ public class PersonRegistrationDTO implements Serializable {
     @NotBlank(message = "can not be blank")
     @Size(min = 4, max = 60, message = "Password by 4 to 60 symbols")
     private String password;
+
+    public Person toPerson() {
+        Person person = new Person();
+        person.setUsername(username);
+        person.setPassword(password);
+        return person;
+    }
 }

@@ -18,6 +18,7 @@ import ru.kolomiec.taskspring.entity.Task;
 import ru.kolomiec.taskspring.services.interfaces.TaskService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Tag(name = "Task Controller", description = "Controllers which allows add/get/delete tasks")
 @RestController
@@ -33,8 +34,13 @@ public class TaskRestController {
             @ApiResponse(responseCode = "200", description = "returns tasks"),
             @ApiResponse(responseCode = "400", description = "person does not have tasks")
     })
-    public ResponseEntity<List<Task>> getAllTasks(@AuthenticationPrincipal PersonDetailsSecurityEntity authPerson) {
-        return ResponseEntity.ok(taskService.getAllTaskByPersonUsername(authPerson.getUsername()));
+    public ResponseEntity<List<TaskDTO>> getAllTasks(@AuthenticationPrincipal PersonDetailsSecurityEntity authPerson) {
+        return ResponseEntity.ok(
+                taskService.getAllTaskByPersonUsername(authPerson.getUsername())
+                        .stream()
+                        .map(TaskDTO::new)
+                        .collect(Collectors.toList())
+                );
     }
 
     @PostMapping("/add-task")

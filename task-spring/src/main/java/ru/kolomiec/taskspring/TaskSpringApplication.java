@@ -39,14 +39,8 @@ public class TaskSpringApplication {
 	}
 
 	@Bean
-	public ModelMapper modelMapper() {
-		return new ModelMapper();
-	}
-	@Bean
 	public ObjectMapper objectMapper() {
 		return new ObjectMapper().findAndRegisterModules();
 	}
-	@Bean
-	public RestTemplate  restTemplate() {return new RestTemplate();}
 
 }

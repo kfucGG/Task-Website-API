@@ -11,7 +11,6 @@ import ru.kolomiec.taskspring.aspects.ServiceLog;
 import ru.kolomiec.taskspring.dto.PersonRegistrationDTO;
 import ru.kolomiec.taskspring.entity.Person;
 import ru.kolomiec.taskspring.entity.Task;
-import ru.kolomiec.taskspring.facade.PersonFacade;
 import ru.kolomiec.taskspring.repository.PersonRepository;
 import ru.kolomiec.taskspring.security.jwt.JwtRequest;
 import ru.kolomiec.taskspring.services.interfaces.PersonService;
@@ -26,7 +25,6 @@ public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository personRepository;
     private final PasswordEncoder passwordEncoder;
-    private final PersonFacade personFacade;
     @Override
     public Person findByUsername(String username) {
         return personRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username does not exist"));
@@ -43,7 +41,7 @@ public class PersonServiceImpl implements PersonService {
     @Transactional
     public Person savePerson(PersonRegistrationDTO personRegistration) {
         personRegistration.setPassword(encodePassword(personRegistration.getPassword()));
-        return personRepository.save(personFacade.fromRegistrationDTOtoPerson(personRegistration));
+        return personRepository.save(personRegistration.toPerson());
     }
 
     @Override
