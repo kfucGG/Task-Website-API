@@ -56,7 +56,7 @@ public class TaskService {
                 allTasks.append(" : ").append("no time").append("\n");
                 continue;
             }
-            allTasks.append(" : ").append(t.getToDoTime()).append("\n");
+            allTasks.append(" : ").append(t.getToDoTime().getTaskDate().toString() + t.getToDoTime().getTaskTime().toString()).append("\n");
         }
         return allTasks.toString();
     }

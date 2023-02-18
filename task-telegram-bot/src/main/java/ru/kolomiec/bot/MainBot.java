@@ -12,6 +12,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.kolomiec.bot.commands.*;
 import ru.kolomiec.database.dao.PersonDAO;
 import ru.kolomiec.dto.TaskDTO;
+import ru.kolomiec.dto.ToDoTime;
 import ru.kolomiec.service.TaskService;
 import ru.kolomiec.util.ReplyKeyboardUtil;
 
@@ -86,7 +87,7 @@ public class MainBot extends TelegramLongPollingCommandBot {
 
             if (message.getText().contains("another day")) {
                 taskCreateSession.setTimeToDo(TimeToDo.ANOTHER_DAY);
-                execute(SendMessage.builder().chatId(chatId).text("Введите дату и время в след формате yyyy-MM-ddTHH:mm:ss").build());
+                execute(SendMessage.builder().chatId(chatId).text("Введите дату и время в след формате yyyy-MM-dd HH:mm").build());
                 return;
             }
 
@@ -107,8 +108,10 @@ public class MainBot extends TelegramLongPollingCommandBot {
             }
 
             if (taskCreateSession.getTimeToDo().compareTo(TimeToDo.ANOTHER_DAY) == 0) {
-                LocalDateTime taskTime = LocalDateTime.parse(message.getText(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-                taskCreateSession.setTaskDTO(new TaskDTO(taskCreateSession.getTaskDTO().getTaskName(), taskTime));
+                String[] timeDateInput = message.getText().split(" ");
+                taskCreateSession.setTaskDTO(new TaskDTO(taskCreateSession.getTaskDTO().getTaskName(), new ToDoTime(
+                        LocalTime.parse(timeDateInput[1]), LocalDate.parse(timeDateInput[0])
+                )));
                 taskService.saveNewTaskToApi(chatId, taskCreateSession.getTaskDTO());
                 taskCreateSession = null;
                 sendKeyboard(update, "Задача сохранена!", ReplyKeyboardUtil.getMainKeyboard());
@@ -117,7 +120,7 @@ public class MainBot extends TelegramLongPollingCommandBot {
 
             if (taskCreateSession.getTimeToDo().compareTo(TimeToDo.TODAY) == 0) {
                 taskCreateSession.setTaskDTO(new TaskDTO(taskCreateSession.getTaskDTO().getTaskName(),
-                        LocalTime.parse(message.getText()).atDate(LocalDate.now())));
+                        new ToDoTime(LocalTime.parse(message.getText()), LocalDate.now())));
                 taskService.saveNewTaskToApi(chatId, taskCreateSession.getTaskDTO());
                 taskCreateSession = null;
                 sendKeyboard(update, "Задача сохранена!", ReplyKeyboardUtil.getMainKeyboard());

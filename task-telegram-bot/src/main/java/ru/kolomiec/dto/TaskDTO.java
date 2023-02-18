@@ -17,7 +17,5 @@ import java.util.Date;
 public class TaskDTO {
 
     private String taskName;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime toDoTime;
+    private ToDoTime toDoTime;
 }

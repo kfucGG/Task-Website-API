@@ -25,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TaskRestController {
 
+    //todo remove facade package and all operation with convert from/to dto in dto classes
     private final TaskService taskService;
     @GetMapping("/all-tasks")
     @Operation(summary = "return all task which owner by auth person")
@@ -44,7 +45,6 @@ public class TaskRestController {
     })
     public ResponseEntity<ResponseMessageDTO> addNewTaskToPerson(@RequestBody @Valid TaskDTO taskDTO,
                                                                  @AuthenticationPrincipal PersonDetailsSecurityEntity authPerson) {
-        System.out.println(taskDTO.toString());
         taskService.saveTaskToPerson(authPerson, taskDTO);
         return ResponseEntity.ok(new ResponseMessageDTO("new task is saved"));
     }

@@ -6,6 +6,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.kolomiec.taskspring.entity.Task;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +26,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query("from Task t where t.owner.username = :ownerUsername and t.id = :taskId")
     Optional<Task> findTaskByOwnerUsernameAndTaskId(String ownerUsername, Long taskId);
 
-    @Query("from Task t where to_char(t.toDoTime, 'yyyy-MM-dd') = :currentDate")
-    Optional<List<Task>> findAllTasksWhichToDoTimeIsCurrentDate(String currentDate);
+    @Query("from Task t where t.toDoTime.taskDate = current_date AND t.toDoTime.taskTime = :currentTime")
+    Optional<List<Task>> finaAllTasksWhichToDoTimeIsCurrentDateAndTime(@Param("currentTime") LocalTime currentTime);
+
 }
