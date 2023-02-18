@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import ru.kolomiec.taskspring.dto.PersonRegistrationDTO;
 import ru.kolomiec.taskspring.dto.TaskDTO;
 import ru.kolomiec.taskspring.entity.Task;
+import ru.kolomiec.taskspring.entity.ToDoTime;
 import ru.kolomiec.taskspring.repository.TaskRepository;
 import ru.kolomiec.taskspring.security.jwt.JwtResponse;
 
@@ -40,7 +41,7 @@ public class TaskRestControllerTest extends ControllerTestBase {
     public void shouldAddNewTask() throws Exception {
         String responseContent = registerPerson(testPerson).getResponse().getContentAsString();
         JwtResponse jwtResponse = objectMapper.readValue(responseContent, JwtResponse.class);
-        TaskDTO testTask = new TaskDTO("do something", LocalDateTime.now());
+        TaskDTO testTask = new TaskDTO("do something", new ToDoTime());
 
         mockMvc.perform(post(BASE_URL + "/task/add-task")
                     .header("Authorization", jwtResponse.getToken())

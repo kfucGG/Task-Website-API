@@ -15,9 +15,12 @@ import ru.kolomiec.taskspring.services.interfaces.PersonService;
 import ru.kolomiec.taskspring.services.interfaces.TaskService;
 import ru.kolomiec.taskspring.util.TimeUtil;
 
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -63,22 +66,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     public List<Task> getAllTasksWhichToDoTimeIsCurrentTime() {
-        List<Task> tasksWithCurrentDate = getAllTasksWhichToDoTimeIsCurrentDate();
-        List<Task> tasksWithCurrentTime = new ArrayList<>();
-        String currentTime = TimeUtil.getCurrentTimeInHoursAndMinutesFormat();
-        DateTimeFormatter hoursAndMinutesFormat = DateTimeFormatter.ofPattern("HH:mm");
-        if (tasksWithCurrentDate != null) {
-            for (Task t : tasksWithCurrentDate) {
-                if (hoursAndMinutesFormat.format(t.getToDoTime()).equals(currentTime))
-                    tasksWithCurrentTime.add(t);
-            }
-        }
-        return tasksWithCurrentTime;
-    }
-
-    public List<Task> getAllTasksWhichToDoTimeIsCurrentDate() {
-        String currentDate = TimeUtil.getCurrentDate();
-        return taskRepository.findAllTasksWhichToDoTimeIsCurrentDate(currentDate).orElse(null);
+        return taskRepository.finaAllTasksWhichToDoTimeIsCurrentDateAndTime(
+                LocalTime.parse(TimeUtil.getCurrentTimeInHoursAndMinutesFormat())
+        ).orElse(Collections.emptyList());
     }
 
     private void checkTaskIsOwnerByPerson(PersonDetailsSecurityEntity authenticatedPerson, Long taskId) {

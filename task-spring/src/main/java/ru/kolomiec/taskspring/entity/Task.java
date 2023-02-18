@@ -1,16 +1,11 @@
 package ru.kolomiec.taskspring.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "task")
@@ -33,7 +28,6 @@ public class Task implements Serializable {
     @JoinColumn(name = "person_id", referencedColumnName = "id", nullable = false)
     private Person owner;
 
-    @Column(name = "to_do_time")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime toDoTime;
+    @Embedded
+    private ToDoTime toDoTime;
 }
