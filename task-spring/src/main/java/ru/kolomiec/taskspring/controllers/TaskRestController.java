@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,10 +25,11 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/task")
 @RequiredArgsConstructor
+@Slf4j
 public class TaskRestController {
 
-    //todo remove facade package and all operation with convert from/to dto in dto classes
     private final TaskService taskService;
+
     @GetMapping("/all-tasks")
     @Operation(summary = "return all task which owner by auth person")
     @ApiResponses(value = {
@@ -35,6 +37,7 @@ public class TaskRestController {
             @ApiResponse(responseCode = "400", description = "person does not have tasks")
     })
     public ResponseEntity<List<TaskDTO>> getAllTasks(@AuthenticationPrincipal PersonDetailsSecurityEntity authPerson) {
+        log.info(String.format("Person: %s try to getting all his tasks", authPerson.getUsername()));
         return ResponseEntity.ok(
                 taskService.getAllTaskByPersonUsername(authPerson.getUsername())
                         .stream()
@@ -51,6 +54,7 @@ public class TaskRestController {
     })
     public ResponseEntity<ResponseMessageDTO> addNewTaskToPerson(@RequestBody @Valid TaskDTO taskDTO,
                                                                  @AuthenticationPrincipal PersonDetailsSecurityEntity authPerson) {
+        log.info(String.format("Person: %s try to add task", authPerson.getUsername()));
         taskService.saveTaskToPerson(authPerson, taskDTO);
         return ResponseEntity.ok(new ResponseMessageDTO("new task is saved"));
     }
@@ -63,6 +67,8 @@ public class TaskRestController {
     })
     public ResponseEntity<ResponseMessageDTO> deletePersonTask(@AuthenticationPrincipal PersonDetailsSecurityEntity authPerson,
                                                                @PathVariable("taskId") Long taskId) {
+        log.info(String.format("Person: %s try to remove task with id %s",
+                authPerson.getUsername(), taskId));
         taskService.deleteTaskOwnedByPerson(authPerson, taskId);
         return ResponseEntity.ok(new ResponseMessageDTO("task with id %s is deleted".formatted(taskId)));
     }

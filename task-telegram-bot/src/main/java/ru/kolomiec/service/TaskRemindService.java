@@ -1,5 +1,6 @@
 package ru.kolomiec.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -13,6 +14,7 @@ import ru.kolomiec.kafka.TaskKafkaConsumerConfig;
 
 import java.time.Duration;
 
+@Slf4j
 public class TaskRemindService extends Thread {
 
     private final KafkaConsumer<String, String> kafkaConsumer = new TaskKafkaConsumerConfig().getTaskKafkaConsumer();
@@ -24,6 +26,7 @@ public class TaskRemindService extends Thread {
     }
     @Override
     public void run() {
+        log.info("Thread is started polling kafka messages from topic every 100 millis");
         while(true){
             ConsumerRecords<String, String> records =
                     kafkaConsumer.poll(Duration.ofMillis(100));

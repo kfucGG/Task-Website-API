@@ -12,6 +12,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class ToDoTime {
 
     private LocalTime taskTime;

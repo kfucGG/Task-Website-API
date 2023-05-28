@@ -16,28 +16,46 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <telegram.api.version>6.4.0</telegram.api.version>
+        <slf4j.version>1.7.26</slf4j.version>
+        <logback.version>1.2.3</logback.version>
     </properties>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.apache.kafka/connect-json -->
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>connect-json</artifactId>
             <version>3.4.0</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310 -->
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>2.14.2</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.telegram/telegrambots -->
+
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.telegram</groupId>
             <artifactId>telegrambots</artifactId>
             <version>${telegram.api.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.telegram/telegrambotsextensions -->
         <dependency>
             <groupId>org.telegram</groupId>
             <artifactId>telegrambotsextensions</artifactId>
@@ -49,19 +67,17 @@
             <version>1.18.24</version>
             <scope>provided</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>5.4.33.Final</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.5.1</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.squareup.okhttp/okhttp -->
         <dependency>
             <groupId>com.squareup.okhttp</groupId>
             <artifactId>okhttp</artifactId>

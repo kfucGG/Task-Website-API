@@ -1,5 +1,6 @@
 package ru.kolomiec.kafka;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -8,6 +9,8 @@ import ru.kolomiec.dto.TaskDTO;
 import java.util.Arrays;
 import java.util.Properties;
 
+
+@Slf4j
 public class TaskKafkaConsumerConfig {
 
     private Properties getConsumerProperties() {
@@ -25,6 +28,7 @@ public class TaskKafkaConsumerConfig {
         return "localhost:9092";
     }
     public KafkaConsumer<String, String> getTaskKafkaConsumer() {
+        log.info("creating kafka consumer which subscribed on task topic");
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(getConsumerProperties());
         consumer.subscribe(Arrays.asList("task"));
         return consumer;

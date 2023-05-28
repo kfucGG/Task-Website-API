@@ -22,7 +22,14 @@ public class RegistrationCommand extends AbstractCommand {
     @Override
     @SneakyThrows
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
-        authService.registration(buildPersonFromArrayOfStringAndChatId(strings, chat));
+        try {
+            authService.registration(buildPersonFromArrayOfStringAndChatId(strings, chat));
+        } catch (IllegalArgumentException e) {
+            absSender.execute(new SendMessage().builder().text("Пользователь с таким именем уже существует, " +
+                            "попробуйте заного")
+                    .chatId(chat.getId()).build());
+            return;
+        }
         absSender.execute(new SendMessage().builder().text("Вы зарегистрированы!")
                 .chatId(chat.getId()).replyMarkup(ReplyKeyboardUtil.getMainKeyboard()).build());
     }

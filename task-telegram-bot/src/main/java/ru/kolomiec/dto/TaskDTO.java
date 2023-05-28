@@ -14,6 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Builder
 public class TaskDTO {
 
     private String taskName;

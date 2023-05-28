@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class TaskRemindScheduler {
 
     private final TaskServiceImpl taskService;
@@ -31,8 +32,10 @@ public class TaskRemindScheduler {
     @Async
     @Scheduled(timeUnit = TimeUnit.SECONDS, fixedRate = 20)
     public void isTimeToDoTask() {
+        log.info("takes all tasks which to do time is now");
         List<Task> list = taskService.getAllTasksWhichToDoTimeIsCurrentTime();
         if (!list.isEmpty()) {
+            log.info("sending tasks to telegram bot by kafka");
             list.stream().forEach(a -> {
                 System.out.println(a.getOwner().getUsername() + "\s" + a.getTaskName());
                 kafkaTemplate.send("task", a.getOwner().getUsername(), a.getTaskName());

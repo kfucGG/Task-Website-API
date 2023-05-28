@@ -21,7 +21,6 @@ public class TestBase {
 
     @Autowired
     public MockMvc mockMvc;
-
     public final String BASE_URL = "http://localhost:7070/api";
     @Autowired
     public ObjectMapper objectMapper;

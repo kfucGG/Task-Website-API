@@ -3,17 +3,21 @@ package ru.kolomiec.requests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.*;
+import lombok.extern.slf4j.Slf4j;
 import ru.kolomiec.database.dao.PersonDAO;
 import ru.kolomiec.database.entity.Person;
 import ru.kolomiec.dto.TaskDTO;
 
 
-
+@Slf4j
 public class TaskApiRequest extends AbstractApiRequest {
 
     private PersonDAO personDAO = new PersonDAO();
 
     public Response saveNewTaskToApi(Long chatId, TaskDTO task) {
+        log.info(String.format(
+                "User with chatId: %s try to adding task:%s", chatId, task.getTaskName()
+        ));
         Person person = personDAO.findPersonByChatId(chatId);
         Request request = new Request.Builder()
                 .url(getBaseApiUrl() + "/task/add-task")

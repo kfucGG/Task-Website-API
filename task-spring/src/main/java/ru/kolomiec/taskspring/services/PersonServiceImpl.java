@@ -2,6 +2,7 @@ package ru.kolomiec.taskspring.services;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,19 +22,30 @@ import java.util.List;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @ServiceLog
+@Slf4j
 public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository personRepository;
     private final PasswordEncoder passwordEncoder;
+
     @Override
     public Person findByUsername(String username) {
         return personRepository.findByUsername(username).orElseThrow(
-                () -> new UsernameNotFoundException("Username does not exist"));
+                () -> {
+                    log.info(String.format(
+                            "Person with username %s already exists", username
+                            )
+                    );
+                    return new UsernameNotFoundException("Username does not exist");
+                });
     }
 
     @Override
     @Transactional
     public Person savePerson(Person person) {
+        log.info(String.format(
+                "saving person with next attributes with username %s", person.getUsername()
+        ));
         person.setPassword(encodePassword(person.getPassword()));
         return personRepository.save(person);
     }
@@ -47,19 +59,30 @@ public class PersonServiceImpl implements PersonService {
     @Override
     @Transactional
     public void deletePerson(Long id) {
+        log.info(String.format(
+                "Deleting person with id: %s", id
+        ));
         personRepository.deleteById(id);
     }
 
     @Override
     @Transactional
     public void addTaskToPerson(Task task, Person person) {
+        log.info(String.format(
+                "adding task to person with username: %s, task name %s, to do time is: %s",
+                person.getUsername(), task.getTaskName(), task.getToDoTime().toString()
+        ));
         person.setUserTask(List.of(task));
         personRepository.save(person);
     }
 
     @Override
     public void isProcessAuthPersonCredentialsIsValid(JwtRequest jwtRequest) {
+        log.info(String.format(
+                "Check that password which was get from person with username: %s is valid", jwtRequest.getUsername()
+        ));
         if (!passwordEncoder.matches(jwtRequest.getPassword(), findByUsername(jwtRequest.getUsername()).getPassword())) {
+            log.info(String.format("Person: %s provided invalid password", jwtRequest.getUsername()));
             throw new BadCredentialsException("bad password");
         }
     }

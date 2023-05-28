@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.kolomiec.taskspring.exceptions.ResponseException;
+import ru.kolomiec.taskspring.exceptions.customexceptions.PersonWithSuchUsernameAlreadyExists;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -25,5 +26,10 @@ public class AuthExceptionHandlerAdvice {
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ResponseException> defunctUsername(UsernameNotFoundException ex) {
         return new ResponseEntity<>(new ResponseException(ex.getMessage(), new Date()), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(PersonWithSuchUsernameAlreadyExists.class)
+    public ResponseEntity<ResponseException> personWithUsernameAlreadyExists(PersonWithSuchUsernameAlreadyExists ex) {
+        return new ResponseEntity<>(new ResponseException(ex.getMessage(), new Date()), HttpStatus.CONFLICT);
     }
 }

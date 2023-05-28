@@ -1,6 +1,7 @@
 package ru.kolomiec.taskspring.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolomiec.taskspring.aspects.ServiceLog;
@@ -23,6 +24,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @ServiceLog
+@Slf4j
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
@@ -30,7 +32,15 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> getAllTaskByUserId(Long id) {
-        return taskRepository.findAllByOwnerId(id).orElseThrow(() -> new EmptyPersonTasksException("you have not tasks"));
+        log.info(String.format(
+                "Person with id: %s try to retrieve all tasks", id
+        ));
+        return taskRepository.findAllByOwnerId(id).orElseThrow(() -> {
+            log.info(String.format(
+                    "Person with id: %s dont have tasks", id
+            ));
+            return new EmptyPersonTasksException("you have not tasks");
+        });
     }
 
     @Override
@@ -43,6 +53,9 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public void saveTaskToPerson(PersonDetailsSecurityEntity authenticatedPerson, TaskDTO taskDTO) {
+        log.info(String.format(
+                "Person: %s try to save task: %s", authenticatedPerson.getUsername(),taskDTO.toString()
+        ));
         Task newTaskToPerson = taskDTO.toTask();
         newTaskToPerson.setOwner(authenticatedPerson.getPerson());
         taskRepository.save(newTaskToPerson);
@@ -68,7 +81,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     private void checkTaskIsOwnerByPerson(PersonDetailsSecurityEntity authenticatedPerson, Long taskId) {
+        log.info(String.format(
+                "Check that person: %s is owner task with id: %s", authenticatedPerson.getUsername(), taskId
+        ));
         taskRepository.findTaskByOwnerUsernameAndTaskId(authenticatedPerson.getUsername(), taskId).orElseThrow(() -> {
+            log.info(String.format(
+                    "Person: %s dont have task with id: %s", authenticatedPerson.getUsername(), taskId
+            ));
             return new PersonHaveNotSuchTaskException("you have not such task");
         });
     }

@@ -1,5 +1,6 @@
 package ru.kolomiec.database.dao;
 
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -10,7 +11,7 @@ import ru.kolomiec.database.entity.Person;
 
 import java.util.List;
 
-
+@Slf4j
 public class PersonDAO {
 
     private final SessionFactory sessionFactory;
@@ -32,6 +33,10 @@ public class PersonDAO {
     }
 
     public void savePerson(Person person, AuthToken authToken) {
+        log.info(String.format(
+                "Try to saving person with name: %s and token starts with %s",
+                person.getUsername(), authToken.getToken().substring(0, 8)
+        ));
         Session session = null;
         try {
             session = sessionFactory.getCurrentSession();
@@ -41,11 +46,15 @@ public class PersonDAO {
             session.save(person);
             session.getTransaction().commit();
         } catch(Exception e) {
+            log.info(String.format(
+                    "saving person: %s is failure", person.getUsername()
+            ));
             session.getTransaction().rollback();
         }
     }
 
     public void updatePerson(Person person, AuthToken authToken) {
+        log.info(String.format("Updating person: %s", person.getUsername()));
         Session session = null;
         deletePersonTokenById(person.getId());
         try {
@@ -56,10 +65,12 @@ public class PersonDAO {
             session.update(person);
             session.getTransaction().commit();
         } catch(Exception e) {
+            log.info(String.format("Updating person: %s is failure", person.getUsername()));
             session.getTransaction().rollback();
         }
     }
     public void deletePersonTokenById(Long id) {
+        log.info("deleting person with id " + id);
         Session session = null;
         try {
             session = sessionFactory.getCurrentSession();
@@ -69,11 +80,17 @@ public class PersonDAO {
             query.executeUpdate();
             session.getTransaction().commit();
         } catch (Exception e) {
+            log.info(String.format(
+                    "deleting person with id: %s is failure"
+            ));
             session.getTransaction().rollback();
         }
 
     }
     public Person findPersonByChatId(Long chatId) {
+        log.info(String.format(
+                "finding person by chat id: %s", chatId
+        ));
         Session session = null;
         Person personFromDb = null;
         try {
@@ -84,11 +101,15 @@ public class PersonDAO {
             personFromDb = query.uniqueResult();
             session.getTransaction().commit();
         } catch(Exception e) {
+            log.info(String.format(
+                    "Person with chat id : %s not found", chatId
+            ));
             session.getTransaction().rollback();
         }
         return personFromDb;
     }
     public Person findPersonByUsername(String username) {
+        log.info("finding person by username: " + username);
         Session session = null;
         try {
             session = sessionFactory.openSession();
@@ -102,7 +123,9 @@ public class PersonDAO {
             session.getTransaction().commit();
             session.close();
         } catch(Exception e) {
-            System.out.println("roll back username not found");
+            log.info(String.format(
+                    "Person by username: %s not found", username
+            ));
             session.getTransaction().rollback();
             session.close();
         }

@@ -24,6 +24,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -64,6 +65,7 @@ public class MainBot extends TelegramLongPollingCommandBot {
         }
 
         if (update.getMessage().getText().contains("all tasks")) {
+
             TaskDTO[] tasks = taskService.getAllTasksFromApi(chatId);
             sendKeyboard(update,"Все ваши задачи: \n%s".formatted(taskService.arrayDTOToString(tasks)), ReplyKeyboardUtil.getMainKeyboard());
             taskCreateSession = null;
