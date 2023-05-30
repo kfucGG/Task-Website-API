@@ -62,6 +62,13 @@ public class TaskService {
 
         return fromJsonToTaskArray(responseBodyJson);
     }
+
+    public void deleteTask(Long chatId, Long taskId) {
+        Response response = taskApiRequest.deleteUserTask(chatId, taskId);
+        if (response.code() != HttpStatus.NO_CONTENT_204.getStatusCode()) {
+            throw new RuntimeException("exception on api, can not delete task");
+        }
+    }
     private TaskDTO[] fromJsonToTaskArray(String json) {
         try {
             return new ObjectMapper().registerModule(new JavaTimeModule()).findAndRegisterModules().readValue(json, TaskDTO[].class);

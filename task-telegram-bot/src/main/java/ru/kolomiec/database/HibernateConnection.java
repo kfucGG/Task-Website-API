@@ -7,6 +7,8 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import ru.kolomiec.database.entity.AuthToken;
 import ru.kolomiec.database.entity.Person;
+import ru.kolomiec.database.entity.enums.DatabaseProperties;
+import ru.kolomiec.util.DatabasePropertiesReaderUtil;
 
 import java.util.Properties;
 
@@ -32,14 +34,19 @@ public class HibernateConnection {
         return configuration;
     }
     private static Properties getHibernateDatasource() {
-        Properties properties  = new Properties();
+        Properties dbProperties = DatabasePropertiesReaderUtil.getDatabaseConnectionProperties();
         if (System.getenv("FROM_DOCKER") != null) {
             return getHibernateDockerDatasource();
         }
-        properties.setProperty(Environment.URL, "jdbc:postgresql://localhost:5432/task_telegram");
-        properties.setProperty(Environment.USER, "root");
-        properties.setProperty(Environment.PASS, "root");
-        return properties;
+        Properties hibernateDatasourceProperties = new Properties();
+        hibernateDatasourceProperties.put(Environment.URL,
+                dbProperties.get(DatabaseProperties.URL.toString()));
+        hibernateDatasourceProperties.put(Environment.USER,
+                dbProperties.get(DatabaseProperties.USERNAME.toString()));
+        hibernateDatasourceProperties.put(Environment.PASS,
+                dbProperties.get(DatabaseProperties.PASSWORD.toString()));
+
+        return hibernateDatasourceProperties;
     }
     private static Properties getHibernateDockerDatasource() {
         Properties properties = new Properties();
@@ -53,8 +60,8 @@ public class HibernateConnection {
         properties.setProperty(Environment.DRIVER, "org.postgresql.Driver");
         properties.setProperty(Environment.DIALECT, "org.hibernate.dialect.PostgreSQLDialect");
         properties.setProperty(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
-        properties.setProperty(Environment.SHOW_SQL, "true");
-        properties.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
+        properties.setProperty(Environment.SHOW_SQL, "false");
+        properties.setProperty(Environment.HBM2DDL_AUTO, "validate");
         return properties;
     }
 }
