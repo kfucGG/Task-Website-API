@@ -53,7 +53,9 @@
     </dependency>
   </dependencies>
   <properties>
+    <slf4j.version>1.7.26</slf4j.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <logback.version>1.2.3</logback.version>
     <telegram.api.version>6.4.0</telegram.api.version>
   </properties>
 </project>
