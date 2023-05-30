@@ -8,6 +8,7 @@ import ru.kolomiec.taskspring.aspects.ServiceLog;
 import ru.kolomiec.taskspring.dto.TaskDTO;
 import ru.kolomiec.taskspring.entity.PersonDetailsSecurityEntity;
 import ru.kolomiec.taskspring.entity.Task;
+import ru.kolomiec.taskspring.entity.ToDoTime;
 import ru.kolomiec.taskspring.exceptions.customexceptions.EmptyPersonTasksException;
 import ru.kolomiec.taskspring.exceptions.customexceptions.PersonHaveNotSuchTaskException;
 import ru.kolomiec.taskspring.repository.TaskRepository;
@@ -69,9 +70,15 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public void deleteTaskOwnedByPerson(PersonDetailsSecurityEntity authenticatedPerson, Long taskId) {
-        checkTaskIsOwnerByPerson(authenticatedPerson, taskId);
-        taskRepository.deleteById(taskId);
+    public void deleteTaskOwnedByPerson(PersonDetailsSecurityEntity authenticatedPerson, TaskDTO taskDTO) {
+        List<Task> tasksByTaskNameAndToDoTimeAndOwner = taskRepository.findTasksByTaskNameAndToDoTimeAndOwner(
+                taskDTO.getTaskName(), taskDTO.getToDoTime(), authenticatedPerson.getPerson()
+        );
+
+        if (tasksByTaskNameAndToDoTimeAndOwner.isEmpty()) {
+            throw new EmptyPersonTasksException("no such task found for deleting");
+        }
+        taskRepository.deleteAll(tasksByTaskNameAndToDoTimeAndOwner);
     }
 
     public List<Task> getAllTasksWhichToDoTimeIsCurrentTime() {
@@ -80,17 +87,6 @@ public class TaskServiceImpl implements TaskService {
         ).orElse(Collections.emptyList());
     }
 
-    private void checkTaskIsOwnerByPerson(PersonDetailsSecurityEntity authenticatedPerson, Long taskId) {
-        log.info(String.format(
-                "Check that person: %s is owner task with id: %s", authenticatedPerson.getUsername(), taskId
-        ));
-        taskRepository.findTaskByOwnerUsernameAndTaskId(authenticatedPerson.getUsername(), taskId).orElseThrow(() -> {
-            log.info(String.format(
-                    "Person: %s dont have task with id: %s", authenticatedPerson.getUsername(), taskId
-            ));
-            return new PersonHaveNotSuchTaskException("you have not such task");
-        });
-    }
 
     private void checkListTaskIsEmpty(List<Task> personTasks) {
         if (personTasks.isEmpty()) throw new EmptyPersonTasksException("you have not tasks");

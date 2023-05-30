@@ -53,8 +53,8 @@ public class HibernateConnection {
         properties.setProperty(Environment.DRIVER, "org.postgresql.Driver");
         properties.setProperty(Environment.DIALECT, "org.hibernate.dialect.PostgreSQLDialect");
         properties.setProperty(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
-        properties.setProperty(Environment.SHOW_SQL, "true");
-        properties.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
+        properties.setProperty(Environment.SHOW_SQL, "false");
+        properties.setProperty(Environment.HBM2DDL_AUTO, "validate");
         return properties;
     }
 }

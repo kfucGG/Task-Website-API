@@ -59,17 +59,19 @@ public class TaskRestController {
         return ResponseEntity.ok(new ResponseMessageDTO("new task is saved"));
     }
 
-    @DeleteMapping("/{taskId}/delete-task")
+    @DeleteMapping("/{task_id}")
     @Operation(summary = "delete task by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "delete task by id"),
             @ApiResponse(responseCode = "400", description = "person dont have task with such id")
     })
     public ResponseEntity<ResponseMessageDTO> deletePersonTask(@AuthenticationPrincipal PersonDetailsSecurityEntity authPerson,
-                                                               @PathVariable("taskId") Long taskId) {
+                                                               @PathVariable("task_id") Long taskId) {
         log.info(String.format("Person: %s try to remove task with id %s",
                 authPerson.getUsername(), taskId));
-        taskService.deleteTaskOwnedByPerson(authPerson, taskId);
-        return ResponseEntity.ok(new ResponseMessageDTO("task with id %s is deleted".formatted(taskId)));
+        taskService.deleteTaskById(taskId);
+        return new ResponseEntity<>(new ResponseMessageDTO("task with id %s is deleted"
+                .formatted(taskId)),
+                HttpStatus.NO_CONTENT);
     }
 }

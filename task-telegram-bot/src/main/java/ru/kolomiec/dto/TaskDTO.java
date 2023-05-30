@@ -10,13 +10,19 @@ import java.util.Date;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Builder
 public class TaskDTO {
 
+    private Long id;
     private String taskName;
     private ToDoTime toDoTime;
+
+    public TaskDTO(String taskName, ToDoTime toDoTime) {
+        this.taskName = taskName;
+        this.toDoTime = toDoTime;
+    }
 }

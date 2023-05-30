@@ -15,6 +15,8 @@ import ru.kolomiec.taskspring.entity.ToDoTime;
 @ToString
 public class TaskDTO {
 
+    private Long id;
+
     @NotBlank(message = "can not be blank")
     @NotNull(message = "can not be null")
     @Size(min = 5, max = 100, message = "should be by 5 to 100 symbols")
@@ -23,6 +25,7 @@ public class TaskDTO {
     private ToDoTime toDoTime;
 
     public TaskDTO(Task task) {
+        this.id = task.getId();
         this.taskName = task.getTaskName();
         this.toDoTime = task.getToDoTime();
     }

@@ -27,6 +27,18 @@ public class TaskApiRequest extends AbstractApiRequest {
         return requestUtil.tryRequest(request);
     }
 
+    public Response deleteUserTask(Long chatId, Long taskId) {
+        log.info(
+                String.format("sending request on api for deleting task with id: %s", taskId)
+        );
+        Person person = personDAO.findPersonByChatId(chatId);
+        Request taskDeleteRequest = new Request.Builder()
+                .url(getBaseApiUrl() + "/task/" + taskId)
+                .header("Authorization", person.getAuthToken().getToken())
+                .delete()
+                .build();
+        return requestUtil.tryRequest(taskDeleteRequest);
+    }
     public Response getAllTaskFromApi(Long chatId) {
         Person person = personDAO.findPersonByChatId(chatId);
         Request request = new Request.Builder()
