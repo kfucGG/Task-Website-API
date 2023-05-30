@@ -44,7 +44,7 @@ public class MainBot extends TelegramLongPollingCommandBot {
     public MainBot() {
         register(new StartCommand("/start", "start command"));
         register(new HelpCommand("/help", "shows all commands"));
-        register(new RegistrationCommand("/r", "registration on api"));
+        register(new RegistrationCommand("/registration", "registration on api"));
     }
     @Override
     public String getBotUsername() {
